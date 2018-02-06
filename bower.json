@@ -13,7 +13,7 @@
     "reader",
     "scanner"
   ],
-  "license": "Apache License Version 2.0",
+  "license": "Apache-2.0",
   "ignore": [
     "**/.*",
     "node_modules",
