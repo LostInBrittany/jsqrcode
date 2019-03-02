@@ -15,7 +15,7 @@
     "url": "https://github.com/LostInBrittany/jsqrcode"
   },
   "scripts": {
-    "postinstall": "node ./tools/build.js; npx rollup -c"
+    "prepare": "node ./tools/build.js; npx rollup -c"
   },
   "devDependencies": {
     "rollup": "^1.4.0",
@@ -27,5 +27,5 @@
   "license": "Apache-2.0",
   "main": "dist/qrcode.js",
   "module": "src/qrcode.js",
-  "version": "2.0.0-beta-1"
+  "version": "2.0.0-beta-2"
 }
