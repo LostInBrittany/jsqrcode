@@ -3816,3 +3816,6 @@ function QRCodeDataBlockReader(blocks,  version,  numErrorCorrectionCode)
 		return output;
 	});
 }
+
+  export default qrcode;
+  export { qrcode };

@@ -1,0 +1,31 @@
+{
+  "name": "@lostinbrittany/jsqrcode",
+  "description": "A JavaScript module, ShadowDom compatible version of Lazersoft superb JavaScript QRCode reader",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "lit-element",
+    "lostinbrittany",
+    "qrcode",
+    "decoder"
+  ],
+  "homepage": "https://github.com/LostInBrittany/jsqrcode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LostInBrittany/jsqrcode"
+  },
+  "scripts": {
+    "postinstall": "node ./tools/build.js; npx rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^1.4.0",
+    "rollup-plugin-banner": "^0.2.0",
+    "rollup-plugin-cleanup": "^3.1.1",
+    "rollup-plugin-uglify": "^6.0.2"
+  },
+  "author": "Horacio Gonzalez <horacio.gonzalez@gmail.com>",
+  "license": "Apache-2.0",
+  "main": "dist/qrcode.js",
+  "module": "src/qrcode.js",
+  "version": "2.0.0-beta-1"
+}
