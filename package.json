@@ -26,6 +26,6 @@
   "author": "Horacio Gonzalez <horacio.gonzalez@gmail.com>",
   "license": "Apache-2.0",
   "main": "dist/qrcode.js",
-  "module": "src/qrcode.js",
-  "version": "2.0.0-beta-2"
+  "module": "module/qrcode.js",
+  "version": "2.0.0-beta-3"
 }
