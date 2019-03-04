@@ -5,10 +5,10 @@
   horacio.gonzalez@gmail.com - https://lostinbrittany.dev
 */
 /*
-  Ported to JavaScript by Lazar Laszlo 2011 
-  
+  Ported to JavaScript by Lazar Laszlo 2011
+
   lazarsoft@gmail.com, www.lazarsoft.info
-  
+
 */
 
 /*
@@ -29,133 +29,112 @@
 */
 
 
-GridSampler = {};
+var GridSampler = {};
 
-GridSampler.checkAndNudgePoints=function( image,  points)
-		{
-			var width = qrcode.width;
-			var height = qrcode.height;
-			// Check and nudge points from start until we see some that are OK:
-			var nudged = true;
-			for (var offset = 0; offset < points.length && nudged; offset += 2)
-			{
-				var x = Math.floor (points[offset]);
-				var y = Math.floor( points[offset + 1]);
-				if (x < - 1 || x > width || y < - 1 || y > height)
-				{
-					throw "Error.checkAndNudgePoints ";
-				}
-				nudged = false;
-				if (x == - 1)
-				{
-					points[offset] = 0.0;
-					nudged = true;
-				}
-				else if (x == width)
-				{
-					points[offset] = width - 1;
-					nudged = true;
-				}
-				if (y == - 1)
-				{
-					points[offset + 1] = 0.0;
-					nudged = true;
-				}
-				else if (y == height)
-				{
-					points[offset + 1] = height - 1;
-					nudged = true;
-				}
-			}
-			// Check and nudge points from end:
-			nudged = true;
-			for (var offset = points.length - 2; offset >= 0 && nudged; offset -= 2)
-			{
-				var x = Math.floor( points[offset]);
-				var y = Math.floor( points[offset + 1]);
-				if (x < - 1 || x > width || y < - 1 || y > height)
-				{
-					throw "Error.checkAndNudgePoints ";
-				}
-				nudged = false;
-				if (x == - 1)
-				{
-					points[offset] = 0.0;
-					nudged = true;
-				}
-				else if (x == width)
-				{
-					points[offset] = width - 1;
-					nudged = true;
-				}
-				if (y == - 1)
-				{
-					points[offset + 1] = 0.0;
-					nudged = true;
-				}
-				else if (y == height)
-				{
-					points[offset + 1] = height - 1;
-					nudged = true;
-				}
-			}
-		}
-	
+GridSampler.checkAndNudgePoints=function( image, points) {
+      var width = qrcode.width;
+      var height = qrcode.height;
+      // Check and nudge points from start until we see some that are OK:
+      var nudged = true;
+      for (var offset = 0; offset < points.length && nudged; offset += 2 ) {
+        var x = Math.floor(points[offset]);
+        var y = Math.floor( points[offset + 1]);
+        if (x < - 1 || x > width || y < - 1 || y > height ) {
+          throw new Error('Error.checkAndNudgePoints');
+        }
+        nudged = false;
+        if (x == - 1 ) {
+          points[offset] = 0.0;
+          nudged = true;
+        }
+        else if (x == width ) {
+          points[offset] = width - 1;
+          nudged = true;
+        }
+        if (y == - 1 ) {
+          points[offset + 1] = 0.0;
+          nudged = true;
+        }
+        else if (y == height ) {
+          points[offset + 1] = height - 1;
+          nudged = true;
+        }
+      }
+      // Check and nudge points from end:
+      nudged = true;
+      for (var offset = points.length - 2; offset >= 0 && nudged; offset -= 2 ) {
+        var x = Math.floor( points[offset]);
+        var y = Math.floor( points[offset + 1]);
+        if (x < - 1 || x > width || y < - 1 || y > height ) {
+          throw new Error('Error.checkAndNudgePoints');
+        }
+        nudged = false;
+        if (x == - 1 ) {
+          points[offset] = 0.0;
+          nudged = true;
+        }
+        else if (x == width ) {
+          points[offset] = width - 1;
+          nudged = true;
+        }
+        if (y == - 1 ) {
+          points[offset + 1] = 0.0;
+          nudged = true;
+        }
+        else if (y == height ) {
+          points[offset + 1] = height - 1;
+          nudged = true;
+        }
+      }
+    };
 
 
-GridSampler.sampleGrid3=function( image,  dimension,  transform)
-		{
-			var bits = new BitMatrix(dimension);
-			var points = new Array(dimension << 1);
-			for (var y = 0; y < dimension; y++)
-			{
-				var max = points.length;
-				var iValue =  y + 0.5;
-				for (var x = 0; x < max; x += 2)
-				{
-					points[x] =  (x >> 1) + 0.5;
-					points[x + 1] = iValue;
-				}
-				transform.transformPoints1(points);
-				// Quick check to see if points transformed to something inside the image;
-				// sufficient to check the endpoints
-				GridSampler.checkAndNudgePoints(image, points);
-				try
-				{
-					for (var x = 0; x < max; x += 2)
-					{
-						var xpoint = (Math.floor( points[x]) * 4) + (Math.floor( points[x + 1]) * qrcode.width * 4);
+GridSampler.sampleGrid3=function( image, dimension, transform ) {
+      var bits = new BitMatrix(dimension);
+      var points = new Array(dimension << 1);
+      for (var y = 0; y < dimension; y++ ) {
+        var max = points.length;
+        var iValue = y + 0.5;
+        for (var x = 0; x < max; x += 2 ) {
+          points[x] = (x >> 1) + 0.5;
+          points[x + 1] = iValue;
+        }
+        transform.transformPoints1(points);
+        // Quick check to see if points transformed to something inside the image;
+        // sufficient to check the endpoints
+        GridSampler.checkAndNudgePoints(image, points);
+        try
+        {
+          for (var x = 0; x < max; x += 2 ) {
+            var xpoint = (Math.floor( points[x]) * 4) + (Math.floor( points[x + 1]) * qrcode.width * 4);
                         var bit = image[Math.floor( points[x])+ qrcode.width* Math.floor( points[x + 1])];
-						qrcode.imagedata.data[xpoint] = bit?255:0;
-						qrcode.imagedata.data[xpoint+1] = bit?255:0;
-						qrcode.imagedata.data[xpoint+2] = 0;
-						qrcode.imagedata.data[xpoint+3] = 255;
-						//bits[x >> 1][ y]=bit;
-						if(bit)
-							bits.set_Renamed(x >> 1, y);
-					}
-				}
-				catch ( aioobe)
-				{
-					// This feels wrong, but, sometimes if the finder patterns are misidentified, the resulting
-					// transform gets "twisted" such that it maps a straight line of points to a set of points
-					// whose endpoints are in bounds, but others are not. There is probably some mathematical
-					// way to detect this about the transformation that I don't know yet.
-					// This results in an ugly runtime exception despite our clever checks above -- can't have
-					// that. We could check each point's coordinates but that feels duplicative. We settle for
-					// catching and wrapping ArrayIndexOutOfBoundsException.
-					throw "Error.checkAndNudgePoints";
-				}
-			}
-			return bits;
-		}
+            qrcode.imagedata.data[xpoint] = bit?255:0;
+            qrcode.imagedata.data[xpoint+1] = bit?255:0;
+            qrcode.imagedata.data[xpoint+2] = 0;
+            qrcode.imagedata.data[xpoint+3] = 255;
+            // bits[x >> 1][ y]=bit;
+            if (bit ) {bits.set_Renamed(x >> 1, y);}
+          }
+        }
+        catch ( aioobe ) {
+          // This feels wrong, but, sometimes if the finder patterns are misidentified, the resulting
+          // transform gets "twisted" such that it maps a straight line of points to a set of points
+          // whose endpoints are in bounds, but others are not. There is probably some mathematical
+          // way to detect this about the transformation that I don't know yet.
+          // This results in an ugly runtime exception despite our clever checks above -- can't have
+          // that. We could check each point's coordinates but that feels duplicative. We settle for
+          // catching and wrapping ArrayIndexOutOfBoundsException.
+          throw 'Error.checkAndNudgePoints';
+        }
+      }
+      return bits;
+    };
 
-GridSampler.sampleGridx=function( image,  dimension,  p1ToX,  p1ToY,  p2ToX,  p2ToY,  p3ToX,  p3ToY,  p4ToX,  p4ToY,  p1FromX,  p1FromY,  p2FromX,  p2FromY,  p3FromX,  p3FromY,  p4FromX,  p4FromY)
-{
-	var transform = PerspectiveTransform.quadrilateralToQuadrilateral(p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY);
-			
-	return GridSampler.sampleGrid3(image, dimension, transform);
-}
+GridSampler.sampleGridx=function( image, dimension, p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY ) {
+  var transform = PerspectiveTransform.quadrilateralToQuadrilateral(p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY);
+
+  return GridSampler.sampleGrid3(image, dimension, transform);
+};
 /*
   Ported to JavaScript by Lazar Laszlo 2011 
   
@@ -417,10 +396,10 @@ function buildVersions()
 	new Version(39, new Array(6, 26, 54, 82, 110, 138, 166), new ECBlocks(30, new ECB(20, 117), new ECB(4, 118)), new ECBlocks(28, new ECB(40, 47), new ECB(7, 48)), new ECBlocks(30, new ECB(43, 24), new ECB(22, 25)), new ECBlocks(30, new ECB(10, 15), new ECB(67, 16))), 
 	new Version(40, new Array(6, 30, 58, 86, 114, 142, 170), new ECBlocks(30, new ECB(19, 118), new ECB(6, 119)), new ECBlocks(28, new ECB(18, 47), new ECB(31, 48)), new ECBlocks(30, new ECB(34, 24), new ECB(34, 25)), new ECBlocks(30, new ECB(20, 15), new ECB(61, 16))));
 }/*
-  Ported to JavaScript by Lazar Laszlo 2011 
-  
+  Ported to JavaScript by Lazar Laszlo 2011
+
   lazarsoft@gmail.com, www.lazarsoft.info
-  
+
 */
 
 /*
@@ -441,394 +420,340 @@ function buildVersions()
 */
 
 
-function PerspectiveTransform( a11,  a21,  a31,  a12,  a22,  a32,  a13,  a23,  a33)
-{
-	this.a11 = a11;
-	this.a12 = a12;
-	this.a13 = a13;
-	this.a21 = a21;
-	this.a22 = a22;
-	this.a23 = a23;
-	this.a31 = a31;
-	this.a32 = a32;
-	this.a33 = a33;
-	this.transformPoints1=function( points)
-		{
-			var max = points.length;
-			var a11 = this.a11;
-			var a12 = this.a12;
-			var a13 = this.a13;
-			var a21 = this.a21;
-			var a22 = this.a22;
-			var a23 = this.a23;
-			var a31 = this.a31;
-			var a32 = this.a32;
-			var a33 = this.a33;
-			for (var i = 0; i < max; i += 2)
-			{
-				var x = points[i];
-				var y = points[i + 1];
-				var denominator = a13 * x + a23 * y + a33;
-				points[i] = (a11 * x + a21 * y + a31) / denominator;
-				points[i + 1] = (a12 * x + a22 * y + a32) / denominator;
-			}
-		}
-	this. transformPoints2=function(xValues, yValues)
-		{
-			var n = xValues.length;
-			for (var i = 0; i < n; i++)
-			{
-				var x = xValues[i];
-				var y = yValues[i];
-				var denominator = this.a13 * x + this.a23 * y + this.a33;
-				xValues[i] = (this.a11 * x + this.a21 * y + this.a31) / denominator;
-				yValues[i] = (this.a12 * x + this.a22 * y + this.a32) / denominator;
-			}
-		}
+function PerspectiveTransform( a11, a21, a31, a12, a22, a32, a13, a23, a33) {
+  this.a11 = a11;
+  this.a12 = a12;
+  this.a13 = a13;
+  this.a21 = a21;
+  this.a22 = a22;
+  this.a23 = a23;
+  this.a31 = a31;
+  this.a32 = a32;
+  this.a33 = a33;
+  this.transformPoints1=function( points) {
+      var max = points.length;
+      var a11 = this.a11;
+      var a12 = this.a12;
+      var a13 = this.a13;
+      var a21 = this.a21;
+      var a22 = this.a22;
+      var a23 = this.a23;
+      var a31 = this.a31;
+      var a32 = this.a32;
+      var a33 = this.a33;
+      for (var i = 0; i < max; i += 2) {
+        var x = points[i];
+        var y = points[i + 1];
+        var denominator = a13 * x + a23 * y + a33;
+        points[i] = (a11 * x + a21 * y + a31) / denominator;
+        points[i + 1] = (a12 * x + a22 * y + a32) / denominator;
+      }
+    };
+  this. transformPoints2=function(xValues, yValues) {
+      var n = xValues.length;
+      for (var i = 0; i < n; i++) {
+        var x = xValues[i];
+        var y = yValues[i];
+        var denominator = this.a13 * x + this.a23 * y + this.a33;
+        xValues[i] = (this.a11 * x + this.a21 * y + this.a31) / denominator;
+        yValues[i] = (this.a12 * x + this.a22 * y + this.a32) / denominator;
+      }
+    };
 
-	this.buildAdjoint=function()
-		{
-			// Adjoint is the transpose of the cofactor matrix:
-			return new PerspectiveTransform(this.a22 * this.a33 - this.a23 * this.a32, this.a23 * this.a31 - this.a21 * this.a33, this.a21 * this.a32 - this.a22 * this.a31, this.a13 * this.a32 - this.a12 * this.a33, this.a11 * this.a33 - this.a13 * this.a31, this.a12 * this.a31 - this.a11 * this.a32, this.a12 * this.a23 - this.a13 * this.a22, this.a13 * this.a21 - this.a11 * this.a23, this.a11 * this.a22 - this.a12 * this.a21);
-		}
-	this.times=function( other)
-		{
-			return new PerspectiveTransform(this.a11 * other.a11 + this.a21 * other.a12 + this.a31 * other.a13, this.a11 * other.a21 + this.a21 * other.a22 + this.a31 * other.a23, this.a11 * other.a31 + this.a21 * other.a32 + this.a31 * other.a33, this.a12 * other.a11 + this.a22 * other.a12 + this.a32 * other.a13, this.a12 * other.a21 + this.a22 * other.a22 + this.a32 * other.a23, this.a12 * other.a31 + this.a22 * other.a32 + this.a32 * other.a33, this.a13 * other.a11 + this.a23 * other.a12 +this.a33 * other.a13, this.a13 * other.a21 + this.a23 * other.a22 + this.a33 * other.a23, this.a13 * other.a31 + this.a23 * other.a32 + this.a33 * other.a33);
-		}
-
+  this.buildAdjoint=function() {
+      // Adjoint is the transpose of the cofactor matrix:
+      return new PerspectiveTransform(this.a22 * this.a33 - this.a23 * this.a32, this.a23 * this.a31 - this.a21 * this.a33, this.a21 * this.a32 - this.a22 * this.a31, this.a13 * this.a32 - this.a12 * this.a33, this.a11 * this.a33 - this.a13 * this.a31, this.a12 * this.a31 - this.a11 * this.a32, this.a12 * this.a23 - this.a13 * this.a22, this.a13 * this.a21 - this.a11 * this.a23, this.a11 * this.a22 - this.a12 * this.a21);
+    };
+  this.times=function( other) {
+      return new PerspectiveTransform(this.a11 * other.a11 + this.a21 * other.a12 + this.a31 * other.a13, this.a11 * other.a21 + this.a21 * other.a22 + this.a31 * other.a23, this.a11 * other.a31 + this.a21 * other.a32 + this.a31 * other.a33, this.a12 * other.a11 + this.a22 * other.a12 + this.a32 * other.a13, this.a12 * other.a21 + this.a22 * other.a22 + this.a32 * other.a23, this.a12 * other.a31 + this.a22 * other.a32 + this.a32 * other.a33, this.a13 * other.a11 + this.a23 * other.a12 +this.a33 * other.a13, this.a13 * other.a21 + this.a23 * other.a22 + this.a33 * other.a23, this.a13 * other.a31 + this.a23 * other.a32 + this.a33 * other.a33);
+    };
 }
 
-PerspectiveTransform.quadrilateralToQuadrilateral=function( x0,  y0,  x1,  y1,  x2,  y2,  x3,  y3,  x0p,  y0p,  x1p,  y1p,  x2p,  y2p,  x3p,  y3p)
-{
-	
-	var qToS = this.quadrilateralToSquare(x0, y0, x1, y1, x2, y2, x3, y3);
-	var sToQ = this.squareToQuadrilateral(x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p);
-	return sToQ.times(qToS);
-}
+PerspectiveTransform.quadrilateralToQuadrilateral=function( x0, y0, x1, y1, x2, y2, x3, y3, x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p) {
+  var qToS = this.quadrilateralToSquare(x0, y0, x1, y1, x2, y2, x3, y3);
+  var sToQ = this.squareToQuadrilateral(x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p);
+  return sToQ.times(qToS);
+};
 
-PerspectiveTransform.squareToQuadrilateral=function( x0,  y0,  x1,  y1,  x2,  y2,  x3,  y3)
-{
-	 dy2 = y3 - y2;
-	 dy3 = y0 - y1 + y2 - y3;
-	if (dy2 == 0.0 && dy3 == 0.0)
-	{
-		return new PerspectiveTransform(x1 - x0, x2 - x1, x0, y1 - y0, y2 - y1, y0, 0.0, 0.0, 1.0);
-	}
-	else
-	{
-		 dx1 = x1 - x2;
-		 dx2 = x3 - x2;
-		 dx3 = x0 - x1 + x2 - x3;
-		 dy1 = y1 - y2;
-		 denominator = dx1 * dy2 - dx2 * dy1;
-		 a13 = (dx3 * dy2 - dx2 * dy3) / denominator;
-		 a23 = (dx1 * dy3 - dx3 * dy1) / denominator;
-		return new PerspectiveTransform(x1 - x0 + a13 * x1, x3 - x0 + a23 * x3, x0, y1 - y0 + a13 * y1, y3 - y0 + a23 * y3, y0, a13, a23, 1.0);
-	}
-}
+PerspectiveTransform.squareToQuadrilateral=function( x0, y0, x1, y1, x2, y2, x3, y3) {
+   var dy2 = y3 - y2;
+   var dy3 = y0 - y1 + y2 - y3;
+  if (dy2 == 0.0 && dy3 == 0.0) {
+    return new PerspectiveTransform(x1 - x0, x2 - x1, x0, y1 - y0, y2 - y1, y0, 0.0, 0.0, 1.0);
+  }
+  else {
+     var dx1 = x1 - x2;
+     var dx2 = x3 - x2;
+     var dx3 = x0 - x1 + x2 - x3;
+     var dy1 = y1 - y2;
+     var denominator = dx1 * dy2 - dx2 * dy1;
+     var a13 = (dx3 * dy2 - dx2 * dy3) / denominator;
+     var a23 = (dx1 * dy3 - dx3 * dy1) / denominator;
+    return new PerspectiveTransform(x1 - x0 + a13 * x1, x3 - x0 + a23 * x3, x0, y1 - y0 + a13 * y1, y3 - y0 + a23 * y3, y0, a13, a23, 1.0);
+  }
+};
 
-PerspectiveTransform.quadrilateralToSquare=function( x0,  y0,  x1,  y1,  x2,  y2,  x3,  y3)
-{
-	// Here, the adjoint serves as the inverse:
-	return this.squareToQuadrilateral(x0, y0, x1, y1, x2, y2, x3, y3).buildAdjoint();
-}
+PerspectiveTransform.quadrilateralToSquare=function( x0, y0, x1, y1, x2, y2, x3, y3) {
+  // Here, the adjoint serves as the inverse:
+  return this.squareToQuadrilateral(x0, y0, x1, y1, x2, y2, x3, y3).buildAdjoint();
+};
 
-function DetectorResult(bits,  points)
-{
-	this.bits = bits;
-	this.points = points;
+function DetectorResult(bits, points) {
+  this.bits = bits;
+  this.points = points;
 }
 
 
-function Detector(image)
-{
-	this.image=image;
-	this.resultPointCallback = null;
-	
-	this.sizeOfBlackWhiteBlackRun=function( fromX,  fromY,  toX,  toY)
-		{
-			// Mild variant of Bresenham's algorithm;
-			// see http://en.wikipedia.org/wiki/Bresenham's_line_algorithm
-			var steep = Math.abs(toY - fromY) > Math.abs(toX - fromX);
-			if (steep)
-			{
-				var temp = fromX;
-				fromX = fromY;
-				fromY = temp;
-				temp = toX;
-				toX = toY;
-				toY = temp;
-			}
-			
-			var dx = Math.abs(toX - fromX);
-			var dy = Math.abs(toY - fromY);
-			var error = - dx >> 1;
-			var ystep = fromY < toY?1:- 1;
-			var xstep = fromX < toX?1:- 1;
-			var state = 0; // In black pixels, looking for white, first or second time
-			for (var x = fromX, y = fromY; x != toX; x += xstep)
-			{
-				
-				var realX = steep?y:x;
-				var realY = steep?x:y;
-				if (state == 1)
-				{
-					// In white pixels, looking for black
-					if (this.image[realX + realY*qrcode.width])
-					{
-						state++;
-					}
-				}
-				else
-				{
-					if (!this.image[realX + realY*qrcode.width])
-					{
-						state++;
-					}
-				}
-				
-				if (state == 3)
-				{
-					// Found black, white, black, and stumbled back onto white; done
-					var diffX = x - fromX;
-					var diffY = y - fromY;
-					return  Math.sqrt( (diffX * diffX + diffY * diffY));
-				}
-				error += dy;
-				if (error > 0)
-				{
-					if (y == toY)
-					{
-						break;
-					}
-					y += ystep;
-					error -= dx;
-				}
-			}
-			var diffX2 = toX - fromX;
-			var diffY2 = toY - fromY;
-			return  Math.sqrt( (diffX2 * diffX2 + diffY2 * diffY2));
-		}
+function Detector(image) {
+  this.image=image;
+  this.resultPointCallback = null;
 
-	
-	this.sizeOfBlackWhiteBlackRunBothWays=function( fromX,  fromY,  toX,  toY)
-		{
-			
-			var result = this.sizeOfBlackWhiteBlackRun(fromX, fromY, toX, toY);
-			
-			// Now count other way -- don't run off image though of course
-			var scale = 1.0;
-			var otherToX = fromX - (toX - fromX);
-			if (otherToX < 0)
-			{
-				scale =  fromX /  (fromX - otherToX);
-				otherToX = 0;
-			}
-			else if (otherToX >= qrcode.width)
-			{
-				scale =  (qrcode.width - 1 - fromX) /  (otherToX - fromX);
-				otherToX = qrcode.width - 1;
-			}
-			var otherToY = Math.floor (fromY - (toY - fromY) * scale);
-			
-			scale = 1.0;
-			if (otherToY < 0)
-			{
-				scale =  fromY /  (fromY - otherToY);
-				otherToY = 0;
-			}
-			else if (otherToY >= qrcode.height)
-			{
-				scale =  (qrcode.height - 1 - fromY) /  (otherToY - fromY);
-				otherToY = qrcode.height - 1;
-			}
-			otherToX = Math.floor (fromX + (otherToX - fromX) * scale);
-			
-			result += this.sizeOfBlackWhiteBlackRun(fromX, fromY, otherToX, otherToY);
-			return result - 1.0; // -1 because we counted the middle pixel twice
-		}
-		
+  this.sizeOfBlackWhiteBlackRun=function( fromX, fromY, toX, toY) {
+      // Mild variant of Bresenham's algorithm;
+      // see http://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+      var steep = Math.abs(toY - fromY) > Math.abs(toX - fromX);
+      if (steep) {
+        var temp = fromX;
+        fromX = fromY;
+        fromY = temp;
+        temp = toX;
+        toX = toY;
+        toY = temp;
+      }
 
-	
-	this.calculateModuleSizeOneWay=function( pattern,  otherPattern)
-		{
-			var moduleSizeEst1 = this.sizeOfBlackWhiteBlackRunBothWays(Math.floor( pattern.X), Math.floor( pattern.Y), Math.floor( otherPattern.X), Math.floor(otherPattern.Y));
-			var moduleSizeEst2 = this.sizeOfBlackWhiteBlackRunBothWays(Math.floor(otherPattern.X), Math.floor(otherPattern.Y), Math.floor( pattern.X), Math.floor(pattern.Y));
-			if (isNaN(moduleSizeEst1))
-			{
-				return moduleSizeEst2 / 7.0;
-			}
-			if (isNaN(moduleSizeEst2))
-			{
-				return moduleSizeEst1 / 7.0;
-			}
-			// Average them, and divide by 7 since we've counted the width of 3 black modules,
-			// and 1 white and 1 black module on either side. Ergo, divide sum by 14.
-			return (moduleSizeEst1 + moduleSizeEst2) / 14.0;
-		}
+      var dx = Math.abs(toX - fromX);
+      var dy = Math.abs(toY - fromY);
+      var error = - dx >> 1;
+      var ystep = fromY < toY?1:- 1;
+      var xstep = fromX < toX?1:- 1;
+      var state = 0; // In black pixels, looking for white, first or second time
+      for (var x = fromX, y = fromY; x != toX; x += xstep) {
+        var realX = steep?y:x;
+        var realY = steep?x:y;
+        if (state == 1) {
+          // In white pixels, looking for black
+          if (this.image[realX + realY*qrcode.width]) {
+            state++;
+          }
+        }
+        else
+        {
+          if (!this.image[realX + realY*qrcode.width]) {
+            state++;
+          }
+        }
 
-	
-	this.calculateModuleSize=function( topLeft,  topRight,  bottomLeft)
-		{
-			// Take the average
-			return (this.calculateModuleSizeOneWay(topLeft, topRight) + this.calculateModuleSizeOneWay(topLeft, bottomLeft)) / 2.0;
-		}
+        if (state == 3) {
+          // Found black, white, black, and stumbled back onto white; done
+          var diffX = x - fromX;
+          var diffY = y - fromY;
+          return Math.sqrt( (diffX * diffX + diffY * diffY));
+        }
+        error += dy;
+        if (error > 0) {
+          if (y == toY) {
+            break;
+          }
+          y += ystep;
+          error -= dx;
+        }
+      }
+      var diffX2 = toX - fromX;
+      var diffY2 = toY - fromY;
+      return Math.sqrt( (diffX2 * diffX2 + diffY2 * diffY2));
+    };
 
-	this.distance=function( pattern1,  pattern2)
-	{
-		xDiff = pattern1.X - pattern2.X;
-		yDiff = pattern1.Y - pattern2.Y;
-		return  Math.sqrt( (xDiff * xDiff + yDiff * yDiff));
-	}
-	this.computeDimension=function( topLeft,  topRight,  bottomLeft,  moduleSize)
-		{
-			
-			var tltrCentersDimension = Math.round(this.distance(topLeft, topRight) / moduleSize);
-			var tlblCentersDimension = Math.round(this.distance(topLeft, bottomLeft) / moduleSize);
-			var dimension = ((tltrCentersDimension + tlblCentersDimension) >> 1) + 7;
-			switch (dimension & 0x03)
-			{
-				
-				// mod 4
-				case 0: 
-					dimension++;
-					break;
-					// 1? do nothing
-				
-				case 2: 
-					dimension--;
-					break;
-				
-				case 3: 
-					throw "Error";
-				}
-			return dimension;
-		}
 
-	this.findAlignmentInRegion=function( overallEstModuleSize,  estAlignmentX,  estAlignmentY,  allowanceFactor)
-		{
-			// Look for an alignment pattern (3 modules in size) around where it
-			// should be
-			var allowance = Math.floor (allowanceFactor * overallEstModuleSize);
-			var alignmentAreaLeftX = Math.max(0, estAlignmentX - allowance);
-			var alignmentAreaRightX = Math.min(qrcode.width - 1, estAlignmentX + allowance);
-			if (alignmentAreaRightX - alignmentAreaLeftX < overallEstModuleSize * 3)
-			{
-				throw "Error";
-			}
-			
-			var alignmentAreaTopY = Math.max(0, estAlignmentY - allowance);
-			var alignmentAreaBottomY = Math.min(qrcode.height - 1, estAlignmentY + allowance);
-			
-			var alignmentFinder = new AlignmentPatternFinder(this.image, alignmentAreaLeftX, alignmentAreaTopY, alignmentAreaRightX - alignmentAreaLeftX, alignmentAreaBottomY - alignmentAreaTopY, overallEstModuleSize, this.resultPointCallback);
-			return alignmentFinder.find();
-		}
-		
-	this.createTransform=function( topLeft,  topRight,  bottomLeft, alignmentPattern, dimension)
-		{
-			var dimMinusThree =  dimension - 3.5;
-			var bottomRightX;
-			var bottomRightY;
-			var sourceBottomRightX;
-			var sourceBottomRightY;
-			if (alignmentPattern != null)
-			{
-				bottomRightX = alignmentPattern.X;
-				bottomRightY = alignmentPattern.Y;
-				sourceBottomRightX = sourceBottomRightY = dimMinusThree - 3.0;
-			}
-			else
-			{
-				// Don't have an alignment pattern, just make up the bottom-right point
-				bottomRightX = (topRight.X - topLeft.X) + bottomLeft.X;
-				bottomRightY = (topRight.Y - topLeft.Y) + bottomLeft.Y;
-				sourceBottomRightX = sourceBottomRightY = dimMinusThree;
-			}
-			
-			var transform = PerspectiveTransform.quadrilateralToQuadrilateral(3.5, 3.5, dimMinusThree, 3.5, sourceBottomRightX, sourceBottomRightY, 3.5, dimMinusThree, topLeft.X, topLeft.Y, topRight.X, topRight.Y, bottomRightX, bottomRightY, bottomLeft.X, bottomLeft.Y);
-			
-			return transform;
-		}		
-	
-	this.sampleGrid=function( image,  transform,  dimension)
-		{
-			
-			var sampler = GridSampler;
-			return sampler.sampleGrid3(image, dimension, transform);
-		}
-	
-	this.processFinderPatternInfo = function( info)
-		{
-			
-			var topLeft = info.TopLeft;
-			var topRight = info.TopRight;
-			var bottomLeft = info.BottomLeft;
-			
-			var moduleSize = this.calculateModuleSize(topLeft, topRight, bottomLeft);
-			if (moduleSize < 1.0)
-			{
-				throw "Error";
-			}
-			var dimension = this.computeDimension(topLeft, topRight, bottomLeft, moduleSize);
-			var provisionalVersion = Version.getProvisionalVersionForDimension(dimension);
-			var modulesBetweenFPCenters = provisionalVersion.DimensionForVersion - 7;
-			
-			var alignmentPattern = null;
-			// Anything above version 1 has an alignment pattern
-			if (provisionalVersion.AlignmentPatternCenters.length > 0)
-			{
-				
-				// Guess where a "bottom right" finder pattern would have been
-				var bottomRightX = topRight.X - topLeft.X + bottomLeft.X;
-				var bottomRightY = topRight.Y - topLeft.Y + bottomLeft.Y;
-				
-				// Estimate that alignment pattern is closer by 3 modules
-				// from "bottom right" to known top left location
-				var correctionToTopLeft = 1.0 - 3.0 /  modulesBetweenFPCenters;
-				var estAlignmentX = Math.floor (topLeft.X + correctionToTopLeft * (bottomRightX - topLeft.X));
-				var estAlignmentY = Math.floor (topLeft.Y + correctionToTopLeft * (bottomRightY - topLeft.Y));
-				
-				// Kind of arbitrary -- expand search radius before giving up
-				for (var i = 4; i <= 16; i <<= 1)
-				{
-					//try
-					//{
-						alignmentPattern = this.findAlignmentInRegion(moduleSize, estAlignmentX, estAlignmentY,  i);
-						break;
-					//}
-					//catch (re)
-					//{
-						// try next round
-					//}
-				}
-				// If we didn't find alignment pattern... well try anyway without it
-			}
-			
-			var transform = this.createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
-			
-			var bits = this.sampleGrid(this.image, transform, dimension);
-			
-			var points;
-			if (alignmentPattern == null)
-			{
-				points = new Array(bottomLeft, topLeft, topRight);
-			}
-			else
-			{
-				points = new Array(bottomLeft, topLeft, topRight, alignmentPattern);
-			}
-			return new DetectorResult(bits, points);
-		}
-		
+  this.sizeOfBlackWhiteBlackRunBothWays=function( fromX, fromY, toX, toY) {
+      var result = this.sizeOfBlackWhiteBlackRun(fromX, fromY, toX, toY);
 
-	
-	this.detect=function()
-	{
-		var info =  new FinderPatternFinder().findFinderPattern(this.image);
-			
-		return this.processFinderPatternInfo(info); 
-	}
-}/*
+      // Now count other way -- don't run off image though of course
+      var scale = 1.0;
+      var otherToX = fromX - (toX - fromX);
+      if (otherToX < 0) {
+        scale = fromX / (fromX - otherToX);
+        otherToX = 0;
+      }
+      else if (otherToX >= qrcode.width) {
+        scale = (qrcode.width - 1 - fromX) / (otherToX - fromX);
+        otherToX = qrcode.width - 1;
+      }
+      var otherToY = Math.floor(fromY - (toY - fromY) * scale);
+
+      scale = 1.0;
+      if (otherToY < 0) {
+        scale = fromY / (fromY - otherToY);
+        otherToY = 0;
+      }
+      else if (otherToY >= qrcode.height) {
+        scale = (qrcode.height - 1 - fromY) / (otherToY - fromY);
+        otherToY = qrcode.height - 1;
+      }
+      otherToX = Math.floor(fromX + (otherToX - fromX) * scale);
+
+      result += this.sizeOfBlackWhiteBlackRun(fromX, fromY, otherToX, otherToY);
+      return result - 1.0; // -1 because we counted the middle pixel twice
+    };
+
+
+
+  this.calculateModuleSizeOneWay=function( pattern, otherPattern) {
+      var moduleSizeEst1 = this.sizeOfBlackWhiteBlackRunBothWays(Math.floor( pattern.X), Math.floor( pattern.Y), Math.floor( otherPattern.X), Math.floor(otherPattern.Y));
+      var moduleSizeEst2 = this.sizeOfBlackWhiteBlackRunBothWays(Math.floor(otherPattern.X), Math.floor(otherPattern.Y), Math.floor( pattern.X), Math.floor(pattern.Y));
+      if (isNaN(moduleSizeEst1)) {
+        return moduleSizeEst2 / 7.0;
+      }
+      if (isNaN(moduleSizeEst2)) {
+        return moduleSizeEst1 / 7.0;
+      }
+      // Average them, and divide by 7 since we've counted the width of 3 black modules,
+      // and 1 white and 1 black module on either side. Ergo, divide sum by 14.
+      return (moduleSizeEst1 + moduleSizeEst2) / 14.0;
+    };
+
+
+  this.calculateModuleSize=function( topLeft, topRight, bottomLeft) {
+      // Take the average
+      return (this.calculateModuleSizeOneWay(topLeft, topRight) + this.calculateModuleSizeOneWay(topLeft, bottomLeft)) / 2.0;
+    };
+
+  this.distance=function( pattern1, pattern2) {
+    var xDiff = pattern1.X - pattern2.X;
+    var yDiff = pattern1.Y - pattern2.Y;
+    return Math.sqrt( (xDiff * xDiff + yDiff * yDiff));
+  };
+  this.computeDimension=function( topLeft, topRight, bottomLeft, moduleSize) {
+      var tltrCentersDimension = Math.round(this.distance(topLeft, topRight) / moduleSize);
+      var tlblCentersDimension = Math.round(this.distance(topLeft, bottomLeft) / moduleSize);
+      var dimension = ((tltrCentersDimension + tlblCentersDimension) >> 1) + 7;
+      switch (dimension & 0x03) {
+        // mod 4
+        case 0:
+          dimension++;
+          break;
+          // 1? do nothing
+
+        case 2:
+          dimension--;
+          break;
+
+        case 3:
+          throw new Error('Error');
+        }
+      return dimension;
+    };
+
+  this.findAlignmentInRegion=function( overallEstModuleSize, estAlignmentX, estAlignmentY, allowanceFactor) {
+      // Look for an alignment pattern (3 modules in size) around where it
+      // should be
+      var allowance = Math.floor(allowanceFactor * overallEstModuleSize);
+      var alignmentAreaLeftX = Math.max(0, estAlignmentX - allowance);
+      var alignmentAreaRightX = Math.min(qrcode.width - 1, estAlignmentX + allowance);
+      if (alignmentAreaRightX - alignmentAreaLeftX < overallEstModuleSize * 3) {
+        throw new Error('Error');
+      }
+
+      var alignmentAreaTopY = Math.max(0, estAlignmentY - allowance);
+      var alignmentAreaBottomY = Math.min(qrcode.height - 1, estAlignmentY + allowance);
+
+      var alignmentFinder = new AlignmentPatternFinder(this.image, alignmentAreaLeftX, alignmentAreaTopY, alignmentAreaRightX - alignmentAreaLeftX, alignmentAreaBottomY - alignmentAreaTopY, overallEstModuleSize, this.resultPointCallback);
+      return alignmentFinder.find();
+    };
+
+  this.createTransform=function( topLeft, topRight, bottomLeft, alignmentPattern, dimension) {
+      var dimMinusThree = dimension - 3.5;
+      var bottomRightX;
+      var bottomRightY;
+      var sourceBottomRightX;
+      var sourceBottomRightY;
+      if (alignmentPattern != null) {
+        bottomRightX = alignmentPattern.X;
+        bottomRightY = alignmentPattern.Y;
+        sourceBottomRightX = sourceBottomRightY = dimMinusThree - 3.0;
+      }
+      else
+      {
+        // Don't have an alignment pattern, just make up the bottom-right point
+        bottomRightX = (topRight.X - topLeft.X) + bottomLeft.X;
+        bottomRightY = (topRight.Y - topLeft.Y) + bottomLeft.Y;
+        sourceBottomRightX = sourceBottomRightY = dimMinusThree;
+      }
+
+      var transform = PerspectiveTransform.quadrilateralToQuadrilateral(3.5, 3.5, dimMinusThree, 3.5, sourceBottomRightX, sourceBottomRightY, 3.5, dimMinusThree, topLeft.X, topLeft.Y, topRight.X, topRight.Y, bottomRightX, bottomRightY, bottomLeft.X, bottomLeft.Y);
+
+      return transform;
+    };
+
+  this.sampleGrid=function( image, transform, dimension) {
+      var sampler = GridSampler;
+      return sampler.sampleGrid3(image, dimension, transform);
+    };
+
+  this.processFinderPatternInfo = function( info) {
+      var topLeft = info.TopLeft;
+      var topRight = info.TopRight;
+      var bottomLeft = info.BottomLeft;
+
+      var moduleSize = this.calculateModuleSize(topLeft, topRight, bottomLeft);
+      if (moduleSize < 1.0) {
+        throw new('Error');
+      }
+      var dimension = this.computeDimension(topLeft, topRight, bottomLeft, moduleSize);
+      var provisionalVersion = Version.getProvisionalVersionForDimension(dimension);
+      var modulesBetweenFPCenters = provisionalVersion.DimensionForVersion - 7;
+
+      var alignmentPattern = null;
+      // Anything above version 1 has an alignment pattern
+      if (provisionalVersion.AlignmentPatternCenters.length > 0) {
+        // Guess where a "bottom right" finder pattern would have been
+        var bottomRightX = topRight.X - topLeft.X + bottomLeft.X;
+        var bottomRightY = topRight.Y - topLeft.Y + bottomLeft.Y;
+
+        // Estimate that alignment pattern is closer by 3 modules
+        // from "bottom right" to known top left location
+        var correctionToTopLeft = 1.0 - 3.0 / modulesBetweenFPCenters;
+        var estAlignmentX = Math.floor(topLeft.X + correctionToTopLeft * (bottomRightX - topLeft.X));
+        var estAlignmentY = Math.floor(topLeft.Y + correctionToTopLeft * (bottomRightY - topLeft.Y));
+
+        // Kind of arbitrary -- expand search radius before giving up
+        for (var i = 4; i <= 16; i <<= 1) {
+          // try
+          // {
+            alignmentPattern = this.findAlignmentInRegion(moduleSize, estAlignmentX, estAlignmentY, i);
+            break;
+          // }
+          // catch (re)
+          // {
+            // try next round
+          // }
+        }
+        // If we didn't find alignment pattern... well try anyway without it
+      }
+
+      var transform = this.createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
+
+      var bits = this.sampleGrid(this.image, transform, dimension);
+
+      var points;
+      if (alignmentPattern == null) {
+        points = new Array(bottomLeft, topLeft, topRight);
+      }
+      else
+      {
+        points = new Array(bottomLeft, topLeft, topRight, alignmentPattern);
+      }
+      return new DetectorResult(bits, points);
+    };
+
+
+
+  this.detect=function() {
+    var info = new FinderPatternFinder().findFinderPattern(this.image);
+
+    return this.processFinderPatternInfo(info);
+  };
+}
+/*
   Ported to JavaScript by Lazar Laszlo 2011 
   
   lazarsoft@gmail.com, www.lazarsoft.info
@@ -1419,10 +1344,10 @@ function BitMatrixParser(bitMatrix)
 			return result;
 		}
 }/*
-  Ported to JavaScript by Lazar Laszlo 2011 
-  
+  Ported to JavaScript by Lazar Laszlo 2011
+
   lazarsoft@gmail.com, www.lazarsoft.info
-  
+
 */
 
 /*
@@ -1443,184 +1368,134 @@ function BitMatrixParser(bitMatrix)
 */
 
 
-DataMask = {};
+var DataMask = {};
 
-DataMask.forReference = function(reference)
-{
-	if (reference < 0 || reference > 7)
-	{
-		throw "System.ArgumentException";
-	}
-	return DataMask.DATA_MASKS[reference];
+DataMask.forReference = function(reference ) {
+  if (reference < 0 || reference > 7 ) {
+    throw new Error('System.ArgumentException');
+  }
+  return DataMask.DATA_MASKS[reference];
+};
+
+function DataMask000( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    return ((i + j) & 0x01) == 0;
+  };
 }
 
-function DataMask000()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		return ((i + j) & 0x01) == 0;
-	}
+function DataMask001( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    return (i & 0x01) == 0;
+  };
 }
 
-function DataMask001()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		return (i & 0x01) == 0;
-	}
+function DataMask010( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    return j % 3 == 0;
+  };
 }
 
-function DataMask010()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		return j % 3 == 0;
-	}
+function DataMask011( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    return (i + j) % 3 == 0;
+  };
 }
 
-function DataMask011()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		return (i + j) % 3 == 0;
-	}
+function DataMask100( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    return (((URShift(i, 1)) + (j / 3)) & 0x01) == 0;
+  };
 }
 
-function DataMask100()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		return (((URShift(i, 1)) + (j / 3)) & 0x01) == 0;
-	}
+function DataMask101( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    var temp = i * j;
+    return (temp & 0x01) + (temp % 3) == 0;
+  };
 }
 
-function DataMask101()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		var temp = i * j;
-		return (temp & 0x01) + (temp % 3) == 0;
-	}
+function DataMask110( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    var temp = i * j;
+    return (((temp & 0x01) + (temp % 3)) & 0x01) == 0;
+  };
 }
-
-function DataMask110()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		var temp = i * j;
-		return (((temp & 0x01) + (temp % 3)) & 0x01) == 0;
-	}
-}
-function DataMask111()
-{
-	this.unmaskBitMatrix=function(bits,  dimension)
-	{
-		for (var i = 0; i < dimension; i++)
-		{
-			for (var j = 0; j < dimension; j++)
-			{
-				if (this.isMasked(i, j))
-				{
-					bits.flip(j, i);
-				}
-			}
-		}
-	}
-	this.isMasked=function( i,  j)
-	{
-		return ((((i + j) & 0x01) + ((i * j) % 3)) & 0x01) == 0;
-	}
+function DataMask111( ) {
+  this.unmaskBitMatrix=function(bits, dimension ) {
+    for (var i = 0; i < dimension; i++ ) {
+      for (var j = 0; j < dimension; j++ ) {
+        if (this.isMasked(i, j) ) {
+          bits.flip(j, i);
+        }
+      }
+    }
+  };
+  this.isMasked=function( i, j ) {
+    return ((((i + j) & 0x01) + ((i * j) % 3)) & 0x01) == 0;
+  };
 }
 
 DataMask.DATA_MASKS = new Array(new DataMask000(), new DataMask001(), new DataMask010(), new DataMask011(), new DataMask100(), new DataMask101(), new DataMask110(), new DataMask111());
@@ -2148,10 +2023,10 @@ GF256.addOrSubtract=function( a,  b)
 {
 	return a ^ b;
 }/*
-  Ported to JavaScript by Lazar Laszlo 2011 
-  
+  Ported to JavaScript by Lazar Laszlo 2011
+
   lazarsoft@gmail.com, www.lazarsoft.info
-  
+
 */
 
 /*
@@ -2172,76 +2047,67 @@ GF256.addOrSubtract=function( a,  b)
 */
 
 
-Decoder={};
+var Decoder = {};
 Decoder.rsDecoder = new ReedSolomonDecoder(GF256.QR_CODE_FIELD);
 
-Decoder.correctErrors=function( codewordBytes,  numDataCodewords)
-{
-	var numCodewords = codewordBytes.length;
-	// First read into an array of ints
-	var codewordsInts = new Array(numCodewords);
-	for (var i = 0; i < numCodewords; i++)
-	{
-		codewordsInts[i] = codewordBytes[i] & 0xFF;
-	}
-	var numECCodewords = codewordBytes.length - numDataCodewords;
-	try
-	{
-		Decoder.rsDecoder.decode(codewordsInts, numECCodewords);
-		//var corrector = new ReedSolomon(codewordsInts, numECCodewords);
-		//corrector.correct();
-	}
-	catch ( rse)
-	{
-		throw rse;
-	}
-	// Copy back into array of bytes -- only need to worry about the bytes that were data
-	// We don't care about errors in the error-correction codewords
-	for (var i = 0; i < numDataCodewords; i++)
-	{
-		codewordBytes[i] =  codewordsInts[i];
-	}
-}
+Decoder.correctErrors=function( codewordBytes, numDataCodewords ) {
+  var numCodewords = codewordBytes.length;
+  // First read into an array of ints
+  var codewordsInts = new Array(numCodewords);
+  for (var i = 0; i < numCodewords; i++ ) {
+    codewordsInts[i] = codewordBytes[i] & 0xFF;
+  }
+  var numECCodewords = codewordBytes.length - numDataCodewords;
+  try {
+    Decoder.rsDecoder.decode(codewordsInts, numECCodewords);
+    // var corrector = new ReedSolomon(codewordsInts, numECCodewords);
+    // corrector.correct();
+  }
+  catch ( rse ) {
+    throw rse;
+  }
+  // Copy back into array of bytes -- only need to worry about the bytes that were data
+  // We don't care about errors in the error-correction codewords
+  for (var i = 0; i < numDataCodewords; i++ ) {
+    codewordBytes[i] = codewordsInts[i];
+  }
+};
 
-Decoder.decode=function(bits)
-{
-	var parser = new BitMatrixParser(bits);
-	var version = parser.readVersion();
-	var ecLevel = parser.readFormatInformation().ErrorCorrectionLevel;
-	
-	// Read codewords
-	var codewords = parser.readCodewords();
+Decoder.decode=function(bits ) {
+  var parser = new BitMatrixParser(bits);
+  var version = parser.readVersion();
+  var ecLevel = parser.readFormatInformation().ErrorCorrectionLevel;
 
-	// Separate into data blocks
-	var dataBlocks = DataBlock.getDataBlocks(codewords, version, ecLevel);
-	
-	// Count total number of data bytes
-	var totalBytes = 0;
-	for (var i = 0; i < dataBlocks.length; i++)
-	{
-		totalBytes += dataBlocks[i].NumDataCodewords;
-	}
-	var resultBytes = new Array(totalBytes);
-	var resultOffset = 0;
-	
-	// Error-correct and copy data blocks together into a stream of bytes
-	for (var j = 0; j < dataBlocks.length; j++)
-	{
-		var dataBlock = dataBlocks[j];
-		var codewordBytes = dataBlock.Codewords;
-		var numDataCodewords = dataBlock.NumDataCodewords;
-		Decoder.correctErrors(codewordBytes, numDataCodewords);
-		for (var i = 0; i < numDataCodewords; i++)
-		{
-			resultBytes[resultOffset++] = codewordBytes[i];
-		}
-	}
-	
-	// Decode the contents of that stream of bytes
-	var reader = new QRCodeDataBlockReader(resultBytes, version.VersionNumber, ecLevel.Bits);
-	return reader;
-	//return DecodedBitStreamParser.decode(resultBytes, version, ecLevel);
-}
+  // Read codewords
+  var codewords = parser.readCodewords();
+
+  // Separate into data blocks
+  var dataBlocks = DataBlock.getDataBlocks(codewords, version, ecLevel);
+
+  // Count total number of data bytes
+  var totalBytes = 0;
+  for (var i = 0; i < dataBlocks.length; i++ ) {
+    totalBytes += dataBlocks[i].NumDataCodewords;
+  }
+  var resultBytes = new Array(totalBytes);
+  var resultOffset = 0;
+
+  // Error-correct and copy data blocks together into a stream of bytes
+  for (var j = 0; j < dataBlocks.length; j++ ) {
+    var dataBlock = dataBlocks[j];
+    var codewordBytes = dataBlock.Codewords;
+    var numDataCodewords = dataBlock.NumDataCodewords;
+    Decoder.correctErrors(codewordBytes, numDataCodewords);
+    for (var i = 0; i < numDataCodewords; i++ ) {
+      resultBytes[resultOffset++] = codewordBytes[i];
+    }
+  }
+
+  // Decode the contents of that stream of bytes
+  var reader = new QRCodeDataBlockReader(resultBytes, version.VersionNumber, ecLevel.Bits);
+  return reader;
+  // return DecodedBitStreamParser.decode(resultBytes, version, ecLevel);
+};
 /*
    Copyright 2011 Lazar Laszlo (lazarsoft@gmail.com, www.lazarsoft.info)
 
@@ -2259,7 +2125,7 @@ Decoder.decode=function(bits)
 */
 
 
-qrcode = {};
+var qrcode = {};
 qrcode.imagedata = null;
 qrcode.width = 0;
 qrcode.height = 0;
@@ -2267,39 +2133,38 @@ qrcode.qrCodeSymbol = null;
 qrcode.debug = false;
 qrcode.maxImgSize = 1024*1024;
 
-qrcode.sizeOfDataLengthInfo =  [  [ 10, 9, 8, 8 ],  [ 12, 11, 16, 10 ],  [ 14, 13, 16, 12 ] ];
+qrcode.sizeOfDataLengthInfo = [[10, 9, 8, 8], [12, 11, 16, 10], [14, 13, 16, 12]];
 
 qrcode.callback = null;
 
 // In order to support ShadowDOM and not to break the current API, I simply add
 // a 2nd parameter : the canvas
-qrcode.decode = function(src, qrCanvas){
-
-  if (arguments.length == 1)  {
+qrcode.decode = function(src, qrCanvas) {
+  if (arguments.length == 1) {
     var image = new Image();
     // image.crossOrigin = "Anonymous";
-    image.onload=function(){
-      //var canvas_qr = document.getElementById("qr-canvas");
-      var canvas_qr = document.createElement('canvas');
-      var context = canvas_qr.getContext('2d');
+    image.onload=function() {
+      // var canvasQr = document.getElementById("qr-canvas");
+      var canvasQr = document.createElement('canvas');
+      var context = canvasQr.getContext('2d');
       var nheight = image.height;
       var nwidth = image.width;
-      if(image.width*image.height>qrcode.maxImgSize) {
+      if (image.width*image.height>qrcode.maxImgSize) {
         var ir = image.width / image.height;
         nheight = Math.sqrt(qrcode.maxImgSize/ir);
         nwidth=ir*nheight;
       }
-      canvas_qr.width = nwidth;
-      canvas_qr.height = nheight;
+      canvasQr.width = nwidth;
+      canvasQr.height = nheight;
 
-      context.drawImage(image, 0, 0, canvas_qr.width, canvas_qr.height );
-      qrcode.width = canvas_qr.width;
-      qrcode.height = canvas_qr.height;
-      try{
-        qrcode.imagedata = context.getImageData(0, 0, canvas_qr.width, canvas_qr.height);
-      }catch(e){
-        qrcode.result = "Cross domain image reading not supported in your browser! Save it to your computer then drag and drop the file!";
-        if(qrcode.callback!=null) {
+      context.drawImage(image, 0, 0, canvasQr.width, canvasQr.height );
+      qrcode.width = canvasQr.width;
+      qrcode.height = canvasQr.height;
+      try {
+        qrcode.imagedata = context.getImageData(0, 0, canvasQr.width, canvasQr.height);
+      } catch (e) {
+        qrcode.result = 'Cross domain image reading not supported in your browser! Save it to your computer then drag and drop the file!';
+        if (qrcode.callback!=null) {
           qrcode.callback(qrcode.result);
         }
         return;
@@ -2307,85 +2172,74 @@ qrcode.decode = function(src, qrCanvas){
       try {
         qrcode.result = qrcode.process(context);
       }
-      catch(e) {
+      catch (e) {
         console.log(e);
-        qrcode.result = "error decoding QR Code";
+        qrcode.result = 'error decoding QR Code';
       }
-      if(qrcode.callback!=null) {
+      if (qrcode.callback!=null) {
         qrcode.callback(qrcode.result);
       }
-
-    }
+    };
     image.src = src;
   } else {
-    var canvas_qr;
-    if(arguments.length==0) {
-      canvas_qr = document.getElementById("qr-canvas");
+    var canvasQr;
+    if (arguments.length==0) {
+      canvasQr = document.getElementById('qr-canvas');
     } else {
-      canvas_qr = qrCanvas;
+      canvasQr = qrCanvas;
     }
-    var context = canvas_qr.getContext('2d');
-    qrcode.width = canvas_qr.width;
-    qrcode.height = canvas_qr.height;
+    var context = canvasQr.getContext('2d');
+    qrcode.width = canvasQr.width;
+    qrcode.height = canvasQr.height;
     qrcode.imagedata = context.getImageData(0, 0, qrcode.width, qrcode.height);
     qrcode.result = qrcode.process(context);
-    if(qrcode.callback!=null) {
+    if (qrcode.callback!=null) {
       qrcode.callback(qrcode.result);
     }
     return qrcode.result;
   }
-}
+};
 
-qrcode.isUrl = function(s)
-{
+qrcode.isUrl = function(s) {
     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     return regexp.test(s);
-}
+};
 
-qrcode.decode_url = function (s)
-{
-  var escaped = "";
-  try{
+qrcode.decode_url = function(s) {
+  var escaped = '';
+  try {
     escaped = escape( s );
   }
-  catch(e)
-  {
+  catch (e) {
     console.log(e);
     escaped = s;
   }
-  var ret = "";
-  try{
+  var ret = '';
+  try {
     ret = decodeURIComponent( escaped );
   }
-  catch(e)
-  {
+  catch (e) {
     console.log(e);
     ret = escaped;
   }
   return ret;
-}
+};
 
-qrcode.decode_utf8 = function ( s )
-{
-    if(qrcode.isUrl(s))
-        return qrcode.decode_url(s);
+qrcode.decode_utf8 = function( s ) {
+    if (qrcode.isUrl(s)) {return qrcode.decode_url(s);}
     else
-        return s;
-}
+        {return s;}
+};
 
-qrcode.process = function(ctx){
-
+qrcode.process = function(ctx) {
     var start = new Date().getTime();
 
     var image = qrcode.grayScaleToBitmap(qrcode.grayscale());
-    //var image = qrcode.binarize(128);
+    // var image = qrcode.binarize(128);
 
-    if(qrcode.debug)
-    {
-        for (var y = 0; y < qrcode.height; y++)
-        {
-            for (var x = 0; x < qrcode.width; x++)
-            {
+    if (qrcode.debug) {
+        for (var y = 0; y < qrcode.height; y++) {
+            for (var x = 0; x < qrcode.width; x++) {
                 var point = (x * 4) + (y * qrcode.width * 4);
                 qrcode.imagedata.data[point] = image[x+y*qrcode.width]?0:0;
                 qrcode.imagedata.data[point+1] = image[x+y*qrcode.width]?0:0;
@@ -2395,32 +2249,27 @@ qrcode.process = function(ctx){
         ctx.putImageData(qrcode.imagedata, 0, 0);
     }
 
-    //var finderPatternInfo = new FinderPatternFinder().findFinderPattern(image);
+    // var finderPatternInfo = new FinderPatternFinder().findFinderPattern(image);
 
     var detector = new Detector(image);
 
     var qRCodeMatrix = detector.detect();
 
-    /*for (var y = 0; y < qRCodeMatrix.bits.Height; y++)
-    {
-        for (var x = 0; x < qRCodeMatrix.bits.Width; x++)
-        {
+    /* for (var y = 0; y < qRCodeMatrix.bits.Height; y++) {
+        for (var x = 0; x < qRCodeMatrix.bits.Width; x++) {
             var point = (x * 4*2) + (y*2 * qrcode.width * 4);
             qrcode.imagedata.data[point] = qRCodeMatrix.bits.get_Renamed(x,y)?0:0;
             qrcode.imagedata.data[point+1] = qRCodeMatrix.bits.get_Renamed(x,y)?0:0;
             qrcode.imagedata.data[point+2] = qRCodeMatrix.bits.get_Renamed(x,y)?255:0;
         }
     }*/
-    if(qrcode.debug)
-        ctx.putImageData(qrcode.imagedata, 0, 0);
+    if (qrcode.debug) {ctx.putImageData(qrcode.imagedata, 0, 0);}
 
     var reader = Decoder.decode(qRCodeMatrix.bits);
     var data = reader.DataByte;
-    var str="";
-    for(var i=0;i<data.length;i++)
-    {
-        for(var j=0;j<data[i].length;j++)
-            str+=String.fromCharCode(data[i][j]);
+    var str='';
+    for (var i=0; i<data.length; i++) {
+        for (var j=0; j<data[i].length; j++) {str+=String.fromCharCode(data[i][j]);}
     }
 
     var end = new Date().getTime();
@@ -2428,135 +2277,111 @@ qrcode.process = function(ctx){
     console.log(time);
 
     return qrcode.decode_utf8(str);
-    //alert("Time:" + time + " Code: "+str);
-}
+    // alert("Time:" + time + " Code: "+str);
+};
 
-qrcode.getPixel = function(x,y){
+qrcode.getPixel = function(x, y) {
     if (qrcode.width < x) {
-        throw "point error";
+        throw new Error('point error');
     }
     if (qrcode.height < y) {
-        throw "point error";
+        throw new Error('point error');
     }
-    point = (x * 4) + (y * qrcode.width * 4);
-    p = (qrcode.imagedata.data[point]*33 + qrcode.imagedata.data[point + 1]*34 + qrcode.imagedata.data[point + 2]*33)/100;
+    var point = (x * 4) + (y * qrcode.width * 4);
+    var p = (qrcode.imagedata.data[point]*33 + qrcode.imagedata.data[point + 1]*34 
+          + qrcode.imagedata.data[point + 2]*33)/100;
     return p;
-}
+};
 
-qrcode.binarize = function(th){
+qrcode.binarize = function(th) {
     var ret = new Array(qrcode.width*qrcode.height);
-    for (var y = 0; y < qrcode.height; y++)
-    {
-        for (var x = 0; x < qrcode.width; x++)
-        {
+    for (var y = 0; y < qrcode.height; y++) {
+        for (var x = 0; x < qrcode.width; x++) {
             var gray = qrcode.getPixel(x, y);
 
             ret[x+y*qrcode.width] = gray<=th?true:false;
         }
     }
     return ret;
-}
+};
 
-qrcode.getMiddleBrightnessPerArea=function(image)
-{
+qrcode.getMiddleBrightnessPerArea=function(image) {
     var numSqrtArea = 4;
-    //obtain middle brightness((min + max) / 2) per area
+    // obtain middle brightness((min + max) / 2) per area
     var areaWidth = Math.floor(qrcode.width / numSqrtArea);
     var areaHeight = Math.floor(qrcode.height / numSqrtArea);
     var minmax = new Array(numSqrtArea);
-    for (var i = 0; i < numSqrtArea; i++)
-    {
+    for (var i = 0; i < numSqrtArea; i++) {
         minmax[i] = new Array(numSqrtArea);
-        for (var i2 = 0; i2 < numSqrtArea; i2++)
-        {
-            minmax[i][i2] = new Array(0,0);
+        for (var i2 = 0; i2 < numSqrtArea; i2++) {
+            minmax[i][i2] = new Array(0, 0);
         }
     }
-    for (var ay = 0; ay < numSqrtArea; ay++)
-    {
-        for (var ax = 0; ax < numSqrtArea; ax++)
-        {
+    for (var ay = 0; ay < numSqrtArea; ay++) {
+        for (var ax = 0; ax < numSqrtArea; ax++) {
             minmax[ax][ay][0] = 0xFF;
-            for (var dy = 0; dy < areaHeight; dy++)
-            {
-                for (var dx = 0; dx < areaWidth; dx++)
-                {
+            for (var dy = 0; dy < areaHeight; dy++) {
+                for (var dx = 0; dx < areaWidth; dx++) {
                     var target = image[areaWidth * ax + dx+(areaHeight * ay + dy)*qrcode.width];
-                    if (target < minmax[ax][ay][0])
-                        minmax[ax][ay][0] = target;
-                    if (target > minmax[ax][ay][1])
-                        minmax[ax][ay][1] = target;
+                    if (target < minmax[ax][ay][0]) {minmax[ax][ay][0] = target;}
+                    if (target > minmax[ax][ay][1]) {minmax[ax][ay][1] = target;}
                 }
             }
-            //minmax[ax][ay][0] = (minmax[ax][ay][0] + minmax[ax][ay][1]) / 2;
+            // minmax[ax][ay][0] = (minmax[ax][ay][0] + minmax[ax][ay][1]) / 2;
         }
     }
     var middle = new Array(numSqrtArea);
-    for (var i3 = 0; i3 < numSqrtArea; i3++)
-    {
+    for (var i3 = 0; i3 < numSqrtArea; i3++) {
         middle[i3] = new Array(numSqrtArea);
     }
-    for (var ay = 0; ay < numSqrtArea; ay++)
-    {
-        for (var ax = 0; ax < numSqrtArea; ax++)
-        {
+    for (var ay = 0; ay < numSqrtArea; ay++) {
+        for (var ax = 0; ax < numSqrtArea; ax++) {
             middle[ax][ay] = Math.floor((minmax[ax][ay][0] + minmax[ax][ay][1]) / 2);
-            //Console.out.print(middle[ax][ay] + ",");
+            // Console.out.print(middle[ax][ay] + ",");
         }
-        //Console.out.println("");
+        // Console.out.println("");
     }
-    //Console.out.println("");
+    // Console.out.println("");
 
     return middle;
-}
+};
 
-qrcode.grayScaleToBitmap=function(grayScale)
-{
+qrcode.grayScaleToBitmap=function(grayScale) {
     var middle = qrcode.getMiddleBrightnessPerArea(grayScale);
     var sqrtNumArea = middle.length;
     var areaWidth = Math.floor(qrcode.width / sqrtNumArea);
     var areaHeight = Math.floor(qrcode.height / sqrtNumArea);
     var bitmap = new Array(qrcode.height*qrcode.width);
 
-    for (var ay = 0; ay < sqrtNumArea; ay++)
-    {
-        for (var ax = 0; ax < sqrtNumArea; ax++)
-        {
-            for (var dy = 0; dy < areaHeight; dy++)
-            {
-                for (var dx = 0; dx < areaWidth; dx++)
-                {
+    for (var ay = 0; ay < sqrtNumArea; ay++) {
+        for (var ax = 0; ax < sqrtNumArea; ax++) {
+            for (var dy = 0; dy < areaHeight; dy++) {
+                for (var dx = 0; dx < areaWidth; dx++) {
                     bitmap[areaWidth * ax + dx+ (areaHeight * ay + dy)*qrcode.width] = (grayScale[areaWidth * ax + dx+ (areaHeight * ay + dy)*qrcode.width] < middle[ax][ay])?true:false;
                 }
             }
         }
     }
     return bitmap;
-}
+};
 
-qrcode.grayscale = function(){
+qrcode.grayscale = function() {
     var ret = new Array(qrcode.width*qrcode.height);
-    for (var y = 0; y < qrcode.height; y++)
-    {
-        for (var x = 0; x < qrcode.width; x++)
-        {
+    for (var y = 0; y < qrcode.height; y++) {
+        for (var x = 0; x < qrcode.width; x++) {
             var gray = qrcode.getPixel(x, y);
 
             ret[x+y*qrcode.width] = gray;
         }
     }
     return ret;
-}
+};
 
 
-
-
-function URShift( number,  bits)
-{
-    if (number >= 0)
-        return number >> bits;
+function URShift( number, bits) {
+    if (number >= 0) {return number >> bits;}
     else
-        return (number >> bits) + (2 << ~bits);
+        {return (number >> bits) + (2 << ~bits);}
 }
 
 
@@ -2566,10 +2391,10 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 /*
-  Ported to JavaScript by Lazar Laszlo 2011 
-  
+  Ported to JavaScript by Lazar Laszlo 2011
+
   lazarsoft@gmail.com, www.lazarsoft.info
-  
+
 */
 
 /*
@@ -2595,623 +2420,529 @@ var MAX_MODULES = 57;
 var INTEGER_MATH_SHIFT = 8;
 var CENTER_QUORUM = 2;
 
-qrcode.orderBestPatterns=function(patterns)
-		{
-			
-			function distance( pattern1,  pattern2)
-			{
-				xDiff = pattern1.X - pattern2.X;
-				yDiff = pattern1.Y - pattern2.Y;
-				return  Math.sqrt( (xDiff * xDiff + yDiff * yDiff));
-			}
-			
-			/// <summary> Returns the z component of the cross product between vectors BC and BA.</summary>
-			function crossProductZ( pointA,  pointB,  pointC)
-			{
-				var bX = pointB.x;
-				var bY = pointB.y;
-				return ((pointC.x - bX) * (pointA.y - bY)) - ((pointC.y - bY) * (pointA.x - bX));
-			}
+qrcode.orderBestPatterns=function(patterns ) {
+      function distance( pattern1, pattern2 ) {
+        var xDiff = pattern1.X - pattern2.X;
+        var yDiff = pattern1.Y - pattern2.Y;
+        return Math.sqrt( (xDiff * xDiff + yDiff * yDiff));
+      }
 
-			
-			// Find distances between pattern centers
-			var zeroOneDistance = distance(patterns[0], patterns[1]);
-			var oneTwoDistance = distance(patterns[1], patterns[2]);
-			var zeroTwoDistance = distance(patterns[0], patterns[2]);
-			
-			var pointA, pointB, pointC;
-			// Assume one closest to other two is B; A and C will just be guesses at first
-			if (oneTwoDistance >= zeroOneDistance && oneTwoDistance >= zeroTwoDistance)
-			{
-				pointB = patterns[0];
-				pointA = patterns[1];
-				pointC = patterns[2];
-			}
-			else if (zeroTwoDistance >= oneTwoDistance && zeroTwoDistance >= zeroOneDistance)
-			{
-				pointB = patterns[1];
-				pointA = patterns[0];
-				pointC = patterns[2];
-			}
-			else
-			{
-				pointB = patterns[2];
-				pointA = patterns[0];
-				pointC = patterns[1];
-			}
-			
-			// Use cross product to figure out whether A and C are correct or flipped.
-			// This asks whether BC x BA has a positive z component, which is the arrangement
-			// we want for A, B, C. If it's negative, then we've got it flipped around and
-			// should swap A and C.
-			if (crossProductZ(pointA, pointB, pointC) < 0.0)
-			{
-				var temp = pointA;
-				pointA = pointC;
-				pointC = temp;
-			}
-			
-			patterns[0] = pointA;
-			patterns[1] = pointB;
-			patterns[2] = pointC;
-		}
+      // / <summary> Returns the z component of the cross product between vectors BC and BA.</summary>
+      function crossProductZ( pointA, pointB, pointC ) {
+        var bX = pointB.x;
+        var bY = pointB.y;
+        return ((pointC.x - bX) * (pointA.y - bY)) - ((pointC.y - bY) * (pointA.x - bX));
+      }
 
 
-function FinderPattern(posX, posY,  estimatedModuleSize)
-{
-	this.x=posX;
-	this.y=posY;
-	this.count = 1;
-	this.estimatedModuleSize = estimatedModuleSize;
-	
-	this.__defineGetter__("EstimatedModuleSize", function()
-	{
-		return this.estimatedModuleSize;
-	}); 
-	this.__defineGetter__("Count", function()
-	{
-		return this.count;
-	});
-	this.__defineGetter__("X", function()
-	{
-		return this.x;
-	});
-	this.__defineGetter__("Y", function()
-	{
-		return this.y;
-	});
-	this.incrementCount = function()
-	{
-		this.count++;
-	}
-	this.aboutEquals=function( moduleSize,  i,  j)
-		{
-			if (Math.abs(i - this.y) <= moduleSize && Math.abs(j - this.x) <= moduleSize)
-			{
-				var moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
-				return moduleSizeDiff <= 1.0 || moduleSizeDiff / this.estimatedModuleSize <= 1.0;
-			}
-			return false;
-		}
-	
+      // Find distances between pattern centers
+      var zeroOneDistance = distance(patterns[0], patterns[1]);
+      var oneTwoDistance = distance(patterns[1], patterns[2]);
+      var zeroTwoDistance = distance(patterns[0], patterns[2]);
+
+      var pointA, pointB, pointC;
+      // Assume one closest to other two is B; A and C will just be guesses at first
+      if (oneTwoDistance >= zeroOneDistance && oneTwoDistance >= zeroTwoDistance ) {
+        pointB = patterns[0];
+        pointA = patterns[1];
+        pointC = patterns[2];
+      }
+      else if (zeroTwoDistance >= oneTwoDistance && zeroTwoDistance >= zeroOneDistance ) {
+        pointB = patterns[1];
+        pointA = patterns[0];
+        pointC = patterns[2];
+      }
+      else
+      {
+        pointB = patterns[2];
+        pointA = patterns[0];
+        pointC = patterns[1];
+      }
+
+      // Use cross product to figure out whether A and C are correct or flipped.
+      // This asks whether BC x BA has a positive z component, which is the arrangement
+      // we want for A, B, C. If it's negative, then we've got it flipped around and
+      // should swap A and C.
+      if (crossProductZ(pointA, pointB, pointC) < 0.0 ) {
+        var temp = pointA;
+        pointA = pointC;
+        pointC = temp;
+      }
+
+      patterns[0] = pointA;
+      patterns[1] = pointB;
+      patterns[2] = pointC;
+    };
+
+
+function FinderPattern(posX, posY, estimatedModuleSize ) {
+  this.x=posX;
+  this.y=posY;
+  this.count = 1;
+  this.estimatedModuleSize = estimatedModuleSize;
+
+  this.__defineGetter__('EstimatedModuleSize', function( ) {
+    return this.estimatedModuleSize;
+  });
+  this.__defineGetter__('Count', function( ) {
+    return this.count;
+  });
+  this.__defineGetter__('X', function( ) {
+    return this.x;
+  });
+  this.__defineGetter__('Y', function( ) {
+    return this.y;
+  });
+  this.incrementCount = function( ) {
+    this.count++;
+  };
+  this.aboutEquals=function( moduleSize, i, j ) {
+      if (Math.abs(i - this.y) <= moduleSize && Math.abs(j - this.x) <= moduleSize ) {
+        var moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
+        return moduleSizeDiff <= 1.0 || moduleSizeDiff / this.estimatedModuleSize <= 1.0;
+      }
+      return false;
+    };
 }
 
-function FinderPatternInfo(patternCenters)
-{
-	this.bottomLeft = patternCenters[0];
-	this.topLeft = patternCenters[1];
-	this.topRight = patternCenters[2];
-	this.__defineGetter__("BottomLeft", function()
-	{
-		return this.bottomLeft;
-	}); 
-	this.__defineGetter__("TopLeft", function()
-	{
-		return this.topLeft;
-	}); 
-	this.__defineGetter__("TopRight", function()
-	{
-		return this.topRight;
-	}); 
+function FinderPatternInfo(patternCenters ) {
+  this.bottomLeft = patternCenters[0];
+  this.topLeft = patternCenters[1];
+  this.topRight = patternCenters[2];
+  this.__defineGetter__('BottomLeft', function( ) {
+    return this.bottomLeft;
+  });
+  this.__defineGetter__('TopLeft', function( ) {
+    return this.topLeft;
+  });
+  this.__defineGetter__('TopRight', function( ) {
+    return this.topRight;
+  });
 }
 
-function FinderPatternFinder()
-{
-	this.image=null;
-	this.possibleCenters = [];
-	this.hasSkipped = false;
-	this.crossCheckStateCount = new Array(0,0,0,0,0);
-	this.resultPointCallback = null;
-	
-	this.__defineGetter__("CrossCheckStateCount", function()
-	{
-		this.crossCheckStateCount[0] = 0;
-		this.crossCheckStateCount[1] = 0;
-		this.crossCheckStateCount[2] = 0;
-		this.crossCheckStateCount[3] = 0;
-		this.crossCheckStateCount[4] = 0;
-		return this.crossCheckStateCount;
-	}); 
-	
-	this.foundPatternCross=function( stateCount)
-		{
-			var totalModuleSize = 0;
-			for (var i = 0; i < 5; i++)
-			{
-				var count = stateCount[i];
-				if (count == 0)
-				{
-					return false;
-				}
-				totalModuleSize += count;
-			}
-			if (totalModuleSize < 7)
-			{
-				return false;
-			}
-			var moduleSize = Math.floor((totalModuleSize << INTEGER_MATH_SHIFT) / 7);
-			var maxVariance = Math.floor(moduleSize / 2);
-			// Allow less than 50% variance from 1-1-3-1-1 proportions
-			return Math.abs(moduleSize - (stateCount[0] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(moduleSize - (stateCount[1] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(3 * moduleSize - (stateCount[2] << INTEGER_MATH_SHIFT)) < 3 * maxVariance && Math.abs(moduleSize - (stateCount[3] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(moduleSize - (stateCount[4] << INTEGER_MATH_SHIFT)) < maxVariance;
-		}
-	this.centerFromEnd=function( stateCount,  end)
-		{
-			return  (end - stateCount[4] - stateCount[3]) - stateCount[2] / 2.0;
-		}
-	this.crossCheckVertical=function( startI,  centerJ,  maxCount,  originalStateCountTotal)
-		{
-			var image = this.image;
-			
-			var maxI = qrcode.height;
-			var stateCount = this.CrossCheckStateCount;
-			
-			// Start counting up from center
-			var i = startI;
-			while (i >= 0 && image[centerJ + i*qrcode.width])
-			{
-				stateCount[2]++;
-				i--;
-			}
-			if (i < 0)
-			{
-				return NaN;
-			}
-			while (i >= 0 && !image[centerJ +i*qrcode.width] && stateCount[1] <= maxCount)
-			{
-				stateCount[1]++;
-				i--;
-			}
-			// If already too many modules in this state or ran off the edge:
-			if (i < 0 || stateCount[1] > maxCount)
-			{
-				return NaN;
-			}
-			while (i >= 0 && image[centerJ + i*qrcode.width] && stateCount[0] <= maxCount)
-			{
-				stateCount[0]++;
-				i--;
-			}
-			if (stateCount[0] > maxCount)
-			{
-				return NaN;
-			}
-			
-			// Now also count down from center
-			i = startI + 1;
-			while (i < maxI && image[centerJ +i*qrcode.width])
-			{
-				stateCount[2]++;
-				i++;
-			}
-			if (i == maxI)
-			{
-				return NaN;
-			}
-			while (i < maxI && !image[centerJ + i*qrcode.width] && stateCount[3] < maxCount)
-			{
-				stateCount[3]++;
-				i++;
-			}
-			if (i == maxI || stateCount[3] >= maxCount)
-			{
-				return NaN;
-			}
-			while (i < maxI && image[centerJ + i*qrcode.width] && stateCount[4] < maxCount)
-			{
-				stateCount[4]++;
-				i++;
-			}
-			if (stateCount[4] >= maxCount)
-			{
-				return NaN;
-			}
-			
-			// If we found a finder-pattern-like section, but its size is more than 40% different than
-			// the original, assume it's a false positive
-			var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
-			if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal)
-			{
-				return NaN;
-			}
-			
-			return this.foundPatternCross(stateCount)?this.centerFromEnd(stateCount, i):NaN;
-		}
-	this.crossCheckHorizontal=function( startJ,  centerI,  maxCount, originalStateCountTotal)
-		{
-			var image = this.image;
-			
-			var maxJ = qrcode.width;
-			var stateCount = this.CrossCheckStateCount;
-			
-			var j = startJ;
-			while (j >= 0 && image[j+ centerI*qrcode.width])
-			{
-				stateCount[2]++;
-				j--;
-			}
-			if (j < 0)
-			{
-				return NaN;
-			}
-			while (j >= 0 && !image[j+ centerI*qrcode.width] && stateCount[1] <= maxCount)
-			{
-				stateCount[1]++;
-				j--;
-			}
-			if (j < 0 || stateCount[1] > maxCount)
-			{
-				return NaN;
-			}
-			while (j >= 0 && image[j+ centerI*qrcode.width] && stateCount[0] <= maxCount)
-			{
-				stateCount[0]++;
-				j--;
-			}
-			if (stateCount[0] > maxCount)
-			{
-				return NaN;
-			}
-			
-			j = startJ + 1;
-			while (j < maxJ && image[j+ centerI*qrcode.width])
-			{
-				stateCount[2]++;
-				j++;
-			}
-			if (j == maxJ)
-			{
-				return NaN;
-			}
-			while (j < maxJ && !image[j+ centerI*qrcode.width] && stateCount[3] < maxCount)
-			{
-				stateCount[3]++;
-				j++;
-			}
-			if (j == maxJ || stateCount[3] >= maxCount)
-			{
-				return NaN;
-			}
-			while (j < maxJ && image[j+ centerI*qrcode.width] && stateCount[4] < maxCount)
-			{
-				stateCount[4]++;
-				j++;
-			}
-			if (stateCount[4] >= maxCount)
-			{
-				return NaN;
-			}
-			
-			// If we found a finder-pattern-like section, but its size is significantly different than
-			// the original, assume it's a false positive
-			var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
-			if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= originalStateCountTotal)
-			{
-				return NaN;
-			}
-			
-			return this.foundPatternCross(stateCount)?this.centerFromEnd(stateCount, j):NaN;
-		}
-	this.handlePossibleCenter=function( stateCount,  i,  j)
-		{
-			var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
-			var centerJ = this.centerFromEnd(stateCount, j); //float
-			var centerI = this.crossCheckVertical(i, Math.floor( centerJ), stateCount[2], stateCountTotal); //float
-			if (!isNaN(centerI))
-			{
-				// Re-cross check
-				centerJ = this.crossCheckHorizontal(Math.floor( centerJ), Math.floor( centerI), stateCount[2], stateCountTotal);
-				if (!isNaN(centerJ))
-				{
-					var estimatedModuleSize =   stateCountTotal / 7.0;
-					var found = false;
-					var max = this.possibleCenters.length;
-					for (var index = 0; index < max; index++)
-					{
-						var center = this.possibleCenters[index];
-						// Look for about the same center and module size:
-						if (center.aboutEquals(estimatedModuleSize, centerI, centerJ))
-						{
-							center.incrementCount();
-							found = true;
-							break;
-						}
-					}
-					if (!found)
-					{
-						var point = new FinderPattern(centerJ, centerI, estimatedModuleSize);
-						this.possibleCenters.push(point);
-						if (this.resultPointCallback != null)
-						{
-							this.resultPointCallback.foundPossibleResultPoint(point);
-						}
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-		
-	this.selectBestPatterns=function()
-		{
-			
-			var startSize = this.possibleCenters.length;
-			if (startSize < 3)
-			{
-				// Couldn't find enough finder patterns
-				throw "Couldn't find enough finder patterns";
-			}
-			
-			// Filter outlier possibilities whose module size is too different
-			if (startSize > 3)
-			{
-				// But we can only afford to do so if we have at least 4 possibilities to choose from
-				var totalModuleSize = 0.0;
+function FinderPatternFinder( ) {
+  this.image=null;
+  this.possibleCenters = [];
+  this.hasSkipped = false;
+  this.crossCheckStateCount = new Array(0, 0, 0, 0, 0);
+  this.resultPointCallback = null;
+
+  this.__defineGetter__('CrossCheckStateCount', function( ) {
+    this.crossCheckStateCount[0] = 0;
+    this.crossCheckStateCount[1] = 0;
+    this.crossCheckStateCount[2] = 0;
+    this.crossCheckStateCount[3] = 0;
+    this.crossCheckStateCount[4] = 0;
+    return this.crossCheckStateCount;
+  });
+
+  this.foundPatternCross=function( stateCount ) {
+      var totalModuleSize = 0;
+      for (var i = 0; i < 5; i++ ) {
+        var count = stateCount[i];
+        if (count == 0 ) {
+          return false;
+        }
+        totalModuleSize += count;
+      }
+      if (totalModuleSize < 7 ) {
+        return false;
+      }
+      var moduleSize = Math.floor((totalModuleSize << INTEGER_MATH_SHIFT) / 7);
+      var maxVariance = Math.floor(moduleSize / 2);
+      // Allow less than 50% variance from 1-1-3-1-1 proportions
+      return Math.abs(moduleSize - (stateCount[0] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(moduleSize - (stateCount[1] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(3 * moduleSize - (stateCount[2] << INTEGER_MATH_SHIFT)) < 3 * maxVariance && Math.abs(moduleSize - (stateCount[3] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(moduleSize - (stateCount[4] << INTEGER_MATH_SHIFT)) < maxVariance;
+    };
+  this.centerFromEnd=function( stateCount, end ) {
+      return (end - stateCount[4] - stateCount[3]) - stateCount[2] / 2.0;
+    };
+  this.crossCheckVertical=function( startI, centerJ, maxCount, originalStateCountTotal ) {
+      var image = this.image;
+
+      var maxI = qrcode.height;
+      var stateCount = this.CrossCheckStateCount;
+
+      // Start counting up from center
+      var i = startI;
+      while (i >= 0 && image[centerJ + i*qrcode.width] ) {
+        stateCount[2]++;
+        i--;
+      }
+      if (i < 0 ) {
+        return NaN;
+      }
+      while (i >= 0 && !image[centerJ +i*qrcode.width] && stateCount[1] <= maxCount ) {
+        stateCount[1]++;
+        i--;
+      }
+      // If already too many modules in this state or ran off the edge:
+      if (i < 0 || stateCount[1] > maxCount ) {
+        return NaN;
+      }
+      while (i >= 0 && image[centerJ + i*qrcode.width] && stateCount[0] <= maxCount ) {
+        stateCount[0]++;
+        i--;
+      }
+      if (stateCount[0] > maxCount ) {
+        return NaN;
+      }
+
+      // Now also count down from center
+      i = startI + 1;
+      while (i < maxI && image[centerJ +i*qrcode.width] ) {
+        stateCount[2]++;
+        i++;
+      }
+      if (i == maxI ) {
+        return NaN;
+      }
+      while (i < maxI && !image[centerJ + i*qrcode.width] && stateCount[3] < maxCount ) {
+        stateCount[3]++;
+        i++;
+      }
+      if (i == maxI || stateCount[3] >= maxCount ) {
+        return NaN;
+      }
+      while (i < maxI && image[centerJ + i*qrcode.width] && stateCount[4] < maxCount ) {
+        stateCount[4]++;
+        i++;
+      }
+      if (stateCount[4] >= maxCount ) {
+        return NaN;
+      }
+
+      // If we found a finder-pattern-like section, but its size is more than 40% different than
+      // the original, assume it's a false positive
+      var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+      if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal ) {
+        return NaN;
+      }
+
+      return this.foundPatternCross(stateCount)?this.centerFromEnd(stateCount, i):NaN;
+    };
+  this.crossCheckHorizontal=function( startJ, centerI, maxCount, originalStateCountTotal ) {
+      var image = this.image;
+
+      var maxJ = qrcode.width;
+      var stateCount = this.CrossCheckStateCount;
+
+      var j = startJ;
+      while (j >= 0 && image[j+ centerI*qrcode.width] ) {
+        stateCount[2]++;
+        j--;
+      }
+      if (j < 0 ) {
+        return NaN;
+      }
+      while (j >= 0 && !image[j+ centerI*qrcode.width] && stateCount[1] <= maxCount ) {
+        stateCount[1]++;
+        j--;
+      }
+      if (j < 0 || stateCount[1] > maxCount ) {
+        return NaN;
+      }
+      while (j >= 0 && image[j+ centerI*qrcode.width] && stateCount[0] <= maxCount ) {
+        stateCount[0]++;
+        j--;
+      }
+      if (stateCount[0] > maxCount ) {
+        return NaN;
+      }
+
+      j = startJ + 1;
+      while (j < maxJ && image[j+ centerI*qrcode.width] ) {
+        stateCount[2]++;
+        j++;
+      }
+      if (j == maxJ ) {
+        return NaN;
+      }
+      while (j < maxJ && !image[j+ centerI*qrcode.width] && stateCount[3] < maxCount ) {
+        stateCount[3]++;
+        j++;
+      }
+      if (j == maxJ || stateCount[3] >= maxCount ) {
+        return NaN;
+      }
+      while (j < maxJ && image[j+ centerI*qrcode.width] && stateCount[4] < maxCount ) {
+        stateCount[4]++;
+        j++;
+      }
+      if (stateCount[4] >= maxCount ) {
+        return NaN;
+      }
+
+      // If we found a finder-pattern-like section, but its size is significantly different than
+      // the original, assume it's a false positive
+      var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+      if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= originalStateCountTotal ) {
+        return NaN;
+      }
+
+      return this.foundPatternCross(stateCount)?this.centerFromEnd(stateCount, j):NaN;
+    };
+  this.handlePossibleCenter=function( stateCount, i, j ) {
+      var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+      var centerJ = this.centerFromEnd(stateCount, j); // float
+      var centerI = this.crossCheckVertical(i, Math.floor( centerJ), stateCount[2], stateCountTotal); // float
+      if (!isNaN(centerI) ) {
+        // Re-cross check
+        centerJ = this.crossCheckHorizontal(Math.floor( centerJ), Math.floor( centerI), stateCount[2], stateCountTotal);
+        if (!isNaN(centerJ) ) {
+          var estimatedModuleSize = stateCountTotal / 7.0;
+          var found = false;
+          var max = this.possibleCenters.length;
+          for (var index = 0; index < max; index++ ) {
+            var center = this.possibleCenters[index];
+            // Look for about the same center and module size:
+            if (center.aboutEquals(estimatedModuleSize, centerI, centerJ) ) {
+              center.incrementCount();
+              found = true;
+              break;
+            }
+          }
+          if (!found ) {
+            var point = new FinderPattern(centerJ, centerI, estimatedModuleSize);
+            this.possibleCenters.push(point);
+            if (this.resultPointCallback != null ) {
+              this.resultPointCallback.foundPossibleResultPoint(point);
+            }
+          }
+          return true;
+        }
+      }
+      return false;
+    };
+
+  this.selectBestPatterns=function( ) {
+      var startSize = this.possibleCenters.length;
+      if (startSize < 3 ) {
+        // Couldn't find enough finder patterns
+        throw 'Couldn\'t find enough finder patterns';
+      }
+
+      // Filter outlier possibilities whose module size is too different
+      if (startSize > 3 ) {
+        // But we can only afford to do so if we have at least 4 possibilities to choose from
+        var totalModuleSize = 0.0;
                 var square = 0.0;
-				for (var i = 0; i < startSize; i++)
-				{
-					//totalModuleSize +=  this.possibleCenters[i].EstimatedModuleSize;
-                    var	centerValue=this.possibleCenters[i].EstimatedModuleSize;
-					totalModuleSize += centerValue;
-					square += (centerValue * centerValue);
-				}
-				var average = totalModuleSize /  startSize;
-                this.possibleCenters.sort(function(center1,center2) {
-				      var dA=Math.abs(center2.EstimatedModuleSize - average);
-				      var dB=Math.abs(center1.EstimatedModuleSize - average);
-				      if (dA < dB) {
-				    	  return (-1);
-				      } else if (dA == dB) {
-				    	  return 0;
-				      } else {
-				    	  return 1;
-				      }
-					});
+        for (var i = 0; i < startSize; i++ ) {
+          // totalModuleSize +=  this.possibleCenters[i].EstimatedModuleSize;
+                    var centerValue=this.possibleCenters[i].EstimatedModuleSize;
+          totalModuleSize += centerValue;
+          square += (centerValue * centerValue);
+        }
+        var average = totalModuleSize / startSize;
+                this.possibleCenters.sort(function(center1, center2) {
+              var dA=Math.abs(center2.EstimatedModuleSize - average);
+              var dB=Math.abs(center1.EstimatedModuleSize - average);
+              if (dA < dB) {
+                return (-1);
+              } else if (dA == dB) {
+                return 0;
+              } else {
+                return 1;
+              }
+          });
 
-				var stdDev = Math.sqrt(square / startSize - average * average);
-				var limit = Math.max(0.2 * average, stdDev);
-				for (var i = this.possibleCenters.length - 1; i >= 0 ; i--)
-				{
-					var pattern =  this.possibleCenters[i];
-					//if (Math.abs(pattern.EstimatedModuleSize - average) > 0.2 * average)
-                    if (Math.abs(pattern.EstimatedModuleSize - average) > limit)
-					{
-						this.possibleCenters.remove(i);
-					}
-				}
-			}
-			
-			if (this.possibleCenters.length > 3)
-			{
-				// Throw away all but those first size candidate points we found.
-				this.possibleCenters.sort(function(a, b){
-					if (a.count > b.count){return -1;}
-					if (a.count < b.count){return 1;}
-					return 0;
-				});
-			}
-			
-			return new Array( this.possibleCenters[0],  this.possibleCenters[1],  this.possibleCenters[2]);
-		}
-		
-	this.findRowSkip=function()
-		{
-			var max = this.possibleCenters.length;
-			if (max <= 1)
-			{
-				return 0;
-			}
-			var firstConfirmedCenter = null;
-			for (var i = 0; i < max; i++)
-			{
-				var center =  this.possibleCenters[i];
-				if (center.Count >= CENTER_QUORUM)
-				{
-					if (firstConfirmedCenter == null)
-					{
-						firstConfirmedCenter = center;
-					}
-					else
-					{
-						// We have two confirmed centers
-						// How far down can we skip before resuming looking for the next
-						// pattern? In the worst case, only the difference between the
-						// difference in the x / y coordinates of the two centers.
-						// This is the case where you find top left last.
-						this.hasSkipped = true;
-						return Math.floor ((Math.abs(firstConfirmedCenter.X - center.X) - Math.abs(firstConfirmedCenter.Y - center.Y)) / 2);
-					}
-				}
-			}
-			return 0;
-		}
-	
-	this.haveMultiplyConfirmedCenters=function()
-		{
-			var confirmedCount = 0;
-			var totalModuleSize = 0.0;
-			var max = this.possibleCenters.length;
-			for (var i = 0; i < max; i++)
-			{
-				var pattern =  this.possibleCenters[i];
-				if (pattern.Count >= CENTER_QUORUM)
-				{
-					confirmedCount++;
-					totalModuleSize += pattern.EstimatedModuleSize;
-				}
-			}
-			if (confirmedCount < 3)
-			{
-				return false;
-			}
-			// OK, we have at least 3 confirmed centers, but, it's possible that one is a "false positive"
-			// and that we need to keep looking. We detect this by asking if the estimated module sizes
-			// vary too much. We arbitrarily say that when the total deviation from average exceeds
-			// 5% of the total module size estimates, it's too much.
-			var average = totalModuleSize / max;
-			var totalDeviation = 0.0;
-			for (var i = 0; i < max; i++)
-			{
-				pattern = this.possibleCenters[i];
-				totalDeviation += Math.abs(pattern.EstimatedModuleSize - average);
-			}
-			return totalDeviation <= 0.05 * totalModuleSize;
-		}
-		
-	this.findFinderPattern = function(image){
-		var tryHarder = false;
-		this.image=image;
-		var maxI = qrcode.height;
-		var maxJ = qrcode.width;
-		var iSkip = Math.floor((3 * maxI) / (4 * MAX_MODULES));
-		if (iSkip < MIN_SKIP || tryHarder)
-		{
-				iSkip = MIN_SKIP;
-		}
-		
-		var done = false;
-		var stateCount = new Array(5);
-		for (var i = iSkip - 1; i < maxI && !done; i += iSkip)
-		{
-			// Get a row of black/white values
-			stateCount[0] = 0;
-			stateCount[1] = 0;
-			stateCount[2] = 0;
-			stateCount[3] = 0;
-			stateCount[4] = 0;
-			var currentState = 0;
-			for (var j = 0; j < maxJ; j++)
-			{
-				if (image[j+i*qrcode.width] )
-				{
-					// Black pixel
-					if ((currentState & 1) == 1)
-					{
-						// Counting white pixels
-						currentState++;
-					}
-					stateCount[currentState]++;
-				}
-				else
-				{
-					// White pixel
-					if ((currentState & 1) == 0)
-					{
-						// Counting black pixels
-						if (currentState == 4)
-						{
-							// A winner?
-							if (this.foundPatternCross(stateCount))
-							{
-								// Yes
-								var confirmed = this.handlePossibleCenter(stateCount, i, j);
-								if (confirmed)
-								{
-									// Start examining every other line. Checking each line turned out to be too
-									// expensive and didn't improve performance.
-									iSkip = 2;
-									if (this.hasSkipped)
-									{
-										done = this.haveMultiplyConfirmedCenters();
-									}
-									else
-									{
-										var rowSkip = this.findRowSkip();
-										if (rowSkip > stateCount[2])
-										{
-											// Skip rows between row of lower confirmed center
-											// and top of presumed third confirmed center
-											// but back up a bit to get a full chance of detecting
-											// it, entire width of center of finder pattern
-											
-											// Skip by rowSkip, but back off by stateCount[2] (size of last center
-											// of pattern we saw) to be conservative, and also back off by iSkip which
-											// is about to be re-added
-											i += rowSkip - stateCount[2] - iSkip;
-											j = maxJ - 1;
-										}
-									}
-								}
-								else
-								{
-									// Advance to next black pixel
-									do 
-									{
-										j++;
-									}
-									while (j < maxJ && !image[j + i*qrcode.width]);
-									j--; // back up to that last white pixel
-								}
-								// Clear state to start looking again
-								currentState = 0;
-								stateCount[0] = 0;
-								stateCount[1] = 0;
-								stateCount[2] = 0;
-								stateCount[3] = 0;
-								stateCount[4] = 0;
-							}
-							else
-							{
-								// No, shift counts back by two
-								stateCount[0] = stateCount[2];
-								stateCount[1] = stateCount[3];
-								stateCount[2] = stateCount[4];
-								stateCount[3] = 1;
-								stateCount[4] = 0;
-								currentState = 3;
-							}
-						}
-						else
-						{
-							stateCount[++currentState]++;
-						}
-					}
-					else
-					{
-						// Counting white pixels
-						stateCount[currentState]++;
-					}
-				}
-			}
-			if (this.foundPatternCross(stateCount))
-			{
-				var confirmed = this.handlePossibleCenter(stateCount, i, maxJ);
-				if (confirmed)
-				{
-					iSkip = stateCount[0];
-					if (this.hasSkipped)
-					{
-						// Found a third one
-						done = haveMultiplyConfirmedCenters();
-					}
-				}
-			}
-		}
-		
-		var patternInfo = this.selectBestPatterns();
-		qrcode.orderBestPatterns(patternInfo);
-		
-		return new FinderPatternInfo(patternInfo);
-	};
+        var stdDev = Math.sqrt(square / startSize - average * average);
+        var limit = Math.max(0.2 * average, stdDev);
+        for (var i = this.possibleCenters.length - 1; i >= 0; i-- ) {
+          var pattern = this.possibleCenters[i];
+          // if (Math.abs(pattern.EstimatedModuleSize - average) > 0.2 * average)
+                    if (Math.abs(pattern.EstimatedModuleSize - average) > limit ) {
+            this.possibleCenters.remove(i);
+          }
+        }
+      }
+
+      if (this.possibleCenters.length > 3 ) {
+        // Throw away all but those first size candidate points we found.
+        this.possibleCenters.sort(function(a, b) {
+          if (a.count > b.count) {return -1;}
+          if (a.count < b.count) {return 1;}
+          return 0;
+        });
+      }
+
+      return new Array( this.possibleCenters[0], this.possibleCenters[1], this.possibleCenters[2]);
+    };
+
+  this.findRowSkip=function( ) {
+      var max = this.possibleCenters.length;
+      if (max <= 1 ) {
+        return 0;
+      }
+      var firstConfirmedCenter = null;
+      for (var i = 0; i < max; i++ ) {
+        var center = this.possibleCenters[i];
+        if (center.Count >= CENTER_QUORUM ) {
+          if (firstConfirmedCenter == null ) {
+            firstConfirmedCenter = center;
+          }
+          else
+          {
+            // We have two confirmed centers
+            // How far down can we skip before resuming looking for the next
+            // pattern? In the worst case, only the difference between the
+            // difference in the x / y coordinates of the two centers.
+            // This is the case where you find top left last.
+            this.hasSkipped = true;
+            return Math.floor((Math.abs(firstConfirmedCenter.X - center.X) - Math.abs(firstConfirmedCenter.Y - center.Y)) / 2);
+          }
+        }
+      }
+      return 0;
+    };
+
+  this.haveMultiplyConfirmedCenters=function( ) {
+      var confirmedCount = 0;
+      var totalModuleSize = 0.0;
+      var max = this.possibleCenters.length;
+      for (var i = 0; i < max; i++ ) {
+        var pattern = this.possibleCenters[i];
+        if (pattern.Count >= CENTER_QUORUM ) {
+          confirmedCount++;
+          totalModuleSize += pattern.EstimatedModuleSize;
+        }
+      }
+      if (confirmedCount < 3 ) {
+        return false;
+      }
+      // OK, we have at least 3 confirmed centers, but, it's possible that one is a "false positive"
+      // and that we need to keep looking. We detect this by asking if the estimated module sizes
+      // vary too much. We arbitrarily say that when the total deviation from average exceeds
+      // 5% of the total module size estimates, it's too much.
+      var average = totalModuleSize / max;
+      var totalDeviation = 0.0;
+      for (var i = 0; i < max; i++ ) {
+        pattern = this.possibleCenters[i];
+        totalDeviation += Math.abs(pattern.EstimatedModuleSize - average);
+      }
+      return totalDeviation <= 0.05 * totalModuleSize;
+    };
+
+  this.findFinderPattern = function(image) {
+    var tryHarder = false;
+    this.image=image;
+    var maxI = qrcode.height;
+    var maxJ = qrcode.width;
+    var iSkip = Math.floor((3 * maxI) / (4 * MAX_MODULES));
+    if (iSkip < MIN_SKIP || tryHarder ) {
+        iSkip = MIN_SKIP;
+    }
+
+    var done = false;
+    var stateCount = new Array(5);
+    for (var i = iSkip - 1; i < maxI && !done; i += iSkip ) {
+      // Get a row of black/white values
+      stateCount[0] = 0;
+      stateCount[1] = 0;
+      stateCount[2] = 0;
+      stateCount[3] = 0;
+      stateCount[4] = 0;
+      var currentState = 0;
+      for (var j = 0; j < maxJ; j++ ) {
+        if (image[j+i*qrcode.width] ) {
+          // Black pixel
+          if ((currentState & 1) == 1 ) {
+            // Counting white pixels
+            currentState++;
+          }
+          stateCount[currentState]++;
+        }
+        else
+        {
+          // White pixel
+          if ((currentState & 1) == 0 ) {
+            // Counting black pixels
+            if (currentState == 4 ) {
+              // A winner?
+              if (this.foundPatternCross(stateCount) ) {
+                // Yes
+                var confirmed = this.handlePossibleCenter(stateCount, i, j);
+                if (confirmed ) {
+                  // Start examining every other line. Checking each line turned out to be too
+                  // expensive and didn't improve performance.
+                  iSkip = 2;
+                  if (this.hasSkipped ) {
+                    done = this.haveMultiplyConfirmedCenters();
+                  }
+                  else
+                  {
+                    var rowSkip = this.findRowSkip();
+                    if (rowSkip > stateCount[2] ) {
+                      // Skip rows between row of lower confirmed center
+                      // and top of presumed third confirmed center
+                      // but back up a bit to get a full chance of detecting
+                      // it, entire width of center of finder pattern
+
+                      // Skip by rowSkip, but back off by stateCount[2] (size of last center
+                      // of pattern we saw) to be conservative, and also back off by iSkip which
+                      // is about to be re-added
+                      i += rowSkip - stateCount[2] - iSkip;
+                      j = maxJ - 1;
+                    }
+                  }
+                }
+                else
+                {
+                  // Advance to next black pixel
+                  do
+                  {
+                    j++;
+                  }
+                  while (j < maxJ && !image[j + i*qrcode.width]);
+                  j--; // back up to that last white pixel
+                }
+                // Clear state to start looking again
+                currentState = 0;
+                stateCount[0] = 0;
+                stateCount[1] = 0;
+                stateCount[2] = 0;
+                stateCount[3] = 0;
+                stateCount[4] = 0;
+              }
+              else
+              {
+                // No, shift counts back by two
+                stateCount[0] = stateCount[2];
+                stateCount[1] = stateCount[3];
+                stateCount[2] = stateCount[4];
+                stateCount[3] = 1;
+                stateCount[4] = 0;
+                currentState = 3;
+              }
+            }
+            else
+            {
+              stateCount[++currentState]++;
+            }
+          }
+          else
+          {
+            // Counting white pixels
+            stateCount[currentState]++;
+          }
+        }
+      }
+      if (this.foundPatternCross(stateCount) ) {
+        var confirmed = this.handlePossibleCenter(stateCount, i, maxJ);
+        if (confirmed ) {
+          iSkip = stateCount[0];
+          if (this.hasSkipped ) {
+            // Found a third one
+            done = haveMultiplyConfirmedCenters();
+          }
+        }
+      }
+    }
+
+    var patternInfo = this.selectBestPatterns();
+    qrcode.orderBestPatterns(patternInfo);
+
+    return new FinderPatternInfo(patternInfo);
+  };
 }
 /*
   Ported to JavaScript by Lazar Laszlo 2011 
@@ -3492,10 +3223,10 @@ function AlignmentPatternFinder( image,  startX,  startY,  width,  height,  modu
 		}
 	
 }/*
-  Ported to JavaScript by Lazar Laszlo 2011 
-  
+  Ported to JavaScript by Lazar Laszlo 2011
+
   lazarsoft@gmail.com, www.lazarsoft.info
-  
+
 */
 
 /*
@@ -3516,303 +3247,274 @@ function AlignmentPatternFinder( image,  startX,  startY,  width,  height,  modu
 */
 
 
-function QRCodeDataBlockReader(blocks,  version,  numErrorCorrectionCode)
-{
-	this.blockPointer = 0;
-	this.bitPointer = 7;
-	this.dataLength = 0;
-	this.blocks = blocks;
-	this.numErrorCorrectionCode = numErrorCorrectionCode;
-	if (version <= 9)
-		this.dataLengthMode = 0;
-	else if (version >= 10 && version <= 26)
-		this.dataLengthMode = 1;
-	else if (version >= 27 && version <= 40)
-		this.dataLengthMode = 2;
-		
-	this.getNextBits = function( numBits)
-		{			
-			var bits = 0;
-			if (numBits < this.bitPointer + 1)
-			{
-				// next word fits into current data block
-				var mask = 0;
-				for (var i = 0; i < numBits; i++)
-				{
-					mask += (1 << i);
-				}
-				mask <<= (this.bitPointer - numBits + 1);
-				
-				bits = (this.blocks[this.blockPointer] & mask) >> (this.bitPointer - numBits + 1);
-				this.bitPointer -= numBits;
-				return bits;
-			}
-			else if (numBits < this.bitPointer + 1 + 8)
-			{
-				// next word crosses 2 data blocks
-				var mask1 = 0;
-				for (var i = 0; i < this.bitPointer + 1; i++)
-				{
-					mask1 += (1 << i);
-				}
-				bits = (this.blocks[this.blockPointer] & mask1) << (numBits - (this.bitPointer + 1));
-                this.blockPointer++;
-				bits += ((this.blocks[this.blockPointer]) >> (8 - (numBits - (this.bitPointer + 1))));
-				
-				this.bitPointer = this.bitPointer - numBits % 8;
-				if (this.bitPointer < 0)
-				{
-					this.bitPointer = 8 + this.bitPointer;
-				}
-				return bits;
-			}
-			else if (numBits < this.bitPointer + 1 + 16)
-			{
-				// next word crosses 3 data blocks
-				var mask1 = 0; // mask of first block
-				var mask3 = 0; // mask of 3rd block
-				//bitPointer + 1 : number of bits of the 1st block
-				//8 : number of the 2nd block (note that use already 8bits because next word uses 3 data blocks)
-				//numBits - (bitPointer + 1 + 8) : number of bits of the 3rd block 
-				for (var i = 0; i < this.bitPointer + 1; i++)
-				{
-					mask1 += (1 << i);
-				}
-				var bitsFirstBlock = (this.blocks[this.blockPointer] & mask1) << (numBits - (this.bitPointer + 1));
-				this.blockPointer++;
-				
-				var bitsSecondBlock = this.blocks[this.blockPointer] << (numBits - (this.bitPointer + 1 + 8));
-				this.blockPointer++;
-				
-				for (var i = 0; i < numBits - (this.bitPointer + 1 + 8); i++)
-				{
-					mask3 += (1 << i);
-				}
-				mask3 <<= 8 - (numBits - (this.bitPointer + 1 + 8));
-				var bitsThirdBlock = (this.blocks[this.blockPointer] & mask3) >> (8 - (numBits - (this.bitPointer + 1 + 8)));
-				
-				bits = bitsFirstBlock + bitsSecondBlock + bitsThirdBlock;
-				this.bitPointer = this.bitPointer - (numBits - 8) % 8;
-				if (this.bitPointer < 0)
-				{
-					this.bitPointer = 8 + this.bitPointer;
-				}
-				return bits;
-			}
-			else
-			{
-				return 0;
-			}
-		}
-	this.NextMode=function()
-	{
-		if ((this.blockPointer > this.blocks.length - this.numErrorCorrectionCode - 2))
-			return 0;
-		else
-			return this.getNextBits(4);
-	}
-	this.getDataLength=function( modeIndicator)
-		{
-			var index = 0;
-			while (true)
-			{
-				if ((modeIndicator >> index) == 1)
-					break;
-				index++;
-			}
-			
-			return this.getNextBits(qrcode.sizeOfDataLengthInfo[this.dataLengthMode][index]);
-		}
-	this.getRomanAndFigureString=function( dataLength)
-		{
-			var length = dataLength;
-			var intData = 0;
-			var strData = "";
-			var tableRomanAndFigure = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '$', '%', '*', '+', '-', '.', '/', ':');
-			do 
-			{
-				if (length > 1)
-				{
-					intData = this.getNextBits(11);
-					var firstLetter = Math.floor(intData / 45);
-					var secondLetter = intData % 45;
-					strData += tableRomanAndFigure[firstLetter];
-					strData += tableRomanAndFigure[secondLetter];
-					length -= 2;
-				}
-				else if (length == 1)
-				{
-					intData = this.getNextBits(6);
-					strData += tableRomanAndFigure[intData];
-					length -= 1;
-				}
-			}
-			while (length > 0);
-			
-			return strData;
-		}
-	this.getFigureString=function( dataLength)
-		{
-			var length = dataLength;
-			var intData = 0;
-			var strData = "";
-			do 
-			{
-				if (length >= 3)
-				{
-					intData = this.getNextBits(10);
-					if (intData < 100)
-						strData += "0";
-					if (intData < 10)
-						strData += "0";
-					length -= 3;
-				}
-				else if (length == 2)
-				{
-					intData = this.getNextBits(7);
-					if (intData < 10)
-						strData += "0";
-					length -= 2;
-				}
-				else if (length == 1)
-				{
-					intData = this.getNextBits(4);
-					length -= 1;
-				}
-				strData += intData;
-			}
-			while (length > 0);
-			
-			return strData;
-		}
-	this.get8bitByteArray=function( dataLength)
-		{
-			var length = dataLength;
-			var intData = 0;
-			var output = new Array();
-			
-			do 
-			{
-				intData = this.getNextBits(8);
-				output.push( intData);
-				length--;
-			}
-			while (length > 0);
-			return output;
-		}
-    this.getKanjiString=function( dataLength)
-		{
-			var length = dataLength;
-			var intData = 0;
-			var unicodeString = "";
-			do 
-			{
-				intData = getNextBits(13);
-				var lowerByte = intData % 0xC0;
-				var higherByte = intData / 0xC0;
-				
-				var tempWord = (higherByte << 8) + lowerByte;
-				var shiftjisWord = 0;
-				if (tempWord + 0x8140 <= 0x9FFC)
-				{
-					// between 8140 - 9FFC on Shift_JIS character set
-					shiftjisWord = tempWord + 0x8140;
-				}
-				else
-				{
-					// between E040 - EBBF on Shift_JIS character set
-					shiftjisWord = tempWord + 0xC140;
-				}
-				
-				//var tempByte = new Array(0,0);
-				//tempByte[0] = (sbyte) (shiftjisWord >> 8);
-				//tempByte[1] = (sbyte) (shiftjisWord & 0xFF);
-				//unicodeString += new String(SystemUtils.ToCharArray(SystemUtils.ToByteArray(tempByte)));
-                unicodeString += String.fromCharCode(shiftjisWord);
-				length--;
-			}
-			while (length > 0);
-			
-			
-			return unicodeString;
-		}
+function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode ) {
+  this.blockPointer = 0;
+  this.bitPointer = 7;
+  this.dataLength = 0;
+  this.blocks = blocks;
+  this.numErrorCorrectionCode = numErrorCorrectionCode;
+  if (version <= 9)
+    {this.dataLengthMode = 0;}
+  else if (version >= 10 && version <= 26)
+    {this.dataLengthMode = 1;}
+  else if (version >= 27 && version <= 40)
+    {this.dataLengthMode = 2;}
 
-	this.__defineGetter__("DataByte", function()
-	{
-		var output = new Array();
-		var MODE_NUMBER = 1;
-	    var MODE_ROMAN_AND_NUMBER = 2;
-	    var MODE_8BIT_BYTE = 4;
-	    var MODE_KANJI = 8;
-		do 
-					{
-						var mode = this.NextMode();
-						//canvas.println("mode: " + mode);
-						if (mode == 0)
-						{
-							if (output.length > 0)
-								break;
-							else
-								throw "Empty data block";
-						}
-						//if (mode != 1 && mode != 2 && mode != 4 && mode != 8)
-						//	break;
-						//}
-						if (mode != MODE_NUMBER && mode != MODE_ROMAN_AND_NUMBER && mode != MODE_8BIT_BYTE && mode != MODE_KANJI)
-						{
-							/*					canvas.println("Invalid mode: " + mode);
-							mode = guessMode(mode);
-							canvas.println("Guessed mode: " + mode); */
-							throw "Invalid mode: " + mode + " in (block:" + this.blockPointer + " bit:" + this.bitPointer + ")";
-						}
-						dataLength = this.getDataLength(mode);
-						if (dataLength < 1)
-							throw "Invalid data length: " + dataLength;
-						//canvas.println("length: " + dataLength);
-						switch (mode)
-						{
-							
-							case MODE_NUMBER: 
-								//canvas.println("Mode: Figure");
-								var temp_str = this.getFigureString(dataLength);
-								var ta = new Array(temp_str.length);
-								for(var j=0;j<temp_str.length;j++)
-									ta[j]=temp_str.charCodeAt(j);
-								output.push(ta);
-								break;
-							
-							case MODE_ROMAN_AND_NUMBER: 
-								//canvas.println("Mode: Roman&Figure");
-								var temp_str = this.getRomanAndFigureString(dataLength);
-								var ta = new Array(temp_str.length);
-								for(var j=0;j<temp_str.length;j++)
-									ta[j]=temp_str.charCodeAt(j);
-								output.push(ta );
-								//output.Write(SystemUtils.ToByteArray(temp_sbyteArray2), 0, temp_sbyteArray2.Length);
-								break;
-							
-							case MODE_8BIT_BYTE: 
-								//canvas.println("Mode: 8bit Byte");
-								//sbyte[] temp_sbyteArray3;
-								var temp_sbyteArray3 = this.get8bitByteArray(dataLength);
-								output.push(temp_sbyteArray3);
-								//output.Write(SystemUtils.ToByteArray(temp_sbyteArray3), 0, temp_sbyteArray3.Length);
-								break;
-							
-							case MODE_KANJI: 
-								//canvas.println("Mode: Kanji");
-								//sbyte[] temp_sbyteArray4;
-								//temp_sbyteArray4 = SystemUtils.ToSByteArray(SystemUtils.ToByteArray(getKanjiString(dataLength)));
-								//output.Write(SystemUtils.ToByteArray(temp_sbyteArray4), 0, temp_sbyteArray4.Length);
+  this.getNextBits = function( numBits ) {
+      var bits = 0;
+      if (numBits < this.bitPointer + 1 ) {
+        // next word fits into current data block
+        var mask = 0;
+        for (var i = 0; i < numBits; i++ ) {
+          mask += (1 << i);
+        }
+        mask <<= (this.bitPointer - numBits + 1);
+
+        bits = (this.blocks[this.blockPointer] & mask) >> (this.bitPointer - numBits + 1);
+        this.bitPointer -= numBits;
+        return bits;
+      }
+      else if (numBits < this.bitPointer + 1 + 8 ) {
+        // next word crosses 2 data blocks
+        var mask1 = 0;
+        for (var i = 0; i < this.bitPointer + 1; i++ ) {
+          mask1 += (1 << i);
+        }
+        bits = (this.blocks[this.blockPointer] & mask1) << (numBits - (this.bitPointer + 1));
+                this.blockPointer++;
+        bits += ((this.blocks[this.blockPointer]) >> (8 - (numBits - (this.bitPointer + 1))));
+
+        this.bitPointer = this.bitPointer - numBits % 8;
+        if (this.bitPointer < 0 ) {
+          this.bitPointer = 8 + this.bitPointer;
+        }
+        return bits;
+      }
+      else if (numBits < this.bitPointer + 1 + 16 ) {
+        // next word crosses 3 data blocks
+        var mask1 = 0; // mask of first block
+        var mask3 = 0; // mask of 3rd block
+        // bitPointer + 1 : number of bits of the 1st block
+        // 8 : number of the 2nd block (note that use already 8bits because next word uses 3 data blocks)
+        // numBits - (bitPointer + 1 + 8) : number of bits of the 3rd block
+        for (var i = 0; i < this.bitPointer + 1; i++ ) {
+          mask1 += (1 << i);
+        }
+        var bitsFirstBlock = (this.blocks[this.blockPointer] & mask1) << (numBits - (this.bitPointer + 1));
+        this.blockPointer++;
+
+        var bitsSecondBlock = this.blocks[this.blockPointer] << (numBits - (this.bitPointer + 1 + 8));
+        this.blockPointer++;
+
+        for (var i = 0; i < numBits - (this.bitPointer + 1 + 8); i++ ) {
+          mask3 += (1 << i);
+        }
+        mask3 <<= 8 - (numBits - (this.bitPointer + 1 + 8));
+        var bitsThirdBlock = (this.blocks[this.blockPointer] & mask3) >> (8 - (numBits - (this.bitPointer + 1 + 8)));
+
+        bits = bitsFirstBlock + bitsSecondBlock + bitsThirdBlock;
+        this.bitPointer = this.bitPointer - (numBits - 8) % 8;
+        if (this.bitPointer < 0 ) {
+          this.bitPointer = 8 + this.bitPointer;
+        }
+        return bits;
+      }
+      else
+      {
+        return 0;
+      }
+    };
+  this.NextMode=function( ) {
+    if ((this.blockPointer > this.blocks.length - this.numErrorCorrectionCode - 2))
+      {return 0;}
+    else
+      {return this.getNextBits(4);}
+  };
+  this.getDataLength=function( modeIndicator ) {
+      var index = 0;
+      while (true ) {
+        if ((modeIndicator >> index) == 1)
+          {break;}
+        index++;
+      }
+
+      return this.getNextBits(qrcode.sizeOfDataLengthInfo[this.dataLengthMode][index]);
+    };
+  this.getRomanAndFigureString=function( dataLength ) {
+      var length = dataLength;
+      var intData = 0;
+      var strData = '';
+      var tableRomanAndFigure = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '$', '%', '*', '+', '-', '.', '/', ':');
+      do
+      {
+        if (length > 1 ) {
+          intData = this.getNextBits(11);
+          var firstLetter = Math.floor(intData / 45);
+          var secondLetter = intData % 45;
+          strData += tableRomanAndFigure[firstLetter];
+          strData += tableRomanAndFigure[secondLetter];
+          length -= 2;
+        }
+        else if (length == 1 ) {
+          intData = this.getNextBits(6);
+          strData += tableRomanAndFigure[intData];
+          length -= 1;
+        }
+      }
+      while (length > 0);
+
+      return strData;
+    };
+  this.getFigureString=function( dataLength ) {
+      var length = dataLength;
+      var intData = 0;
+      var strData = '';
+      do
+      {
+        if (length >= 3 ) {
+          intData = this.getNextBits(10);
+          if (intData < 100)
+            {strData += '0';}
+          if (intData < 10)
+            {strData += '0';}
+          length -= 3;
+        }
+        else if (length == 2 ) {
+          intData = this.getNextBits(7);
+          if (intData < 10)
+            {strData += '0';}
+          length -= 2;
+        }
+        else if (length == 1 ) {
+          intData = this.getNextBits(4);
+          length -= 1;
+        }
+        strData += intData;
+      }
+      while (length > 0);
+
+      return strData;
+    };
+  this.get8bitByteArray=function( dataLength ) {
+      var length = dataLength;
+      var intData = 0;
+      var output = new Array();
+
+      do
+      {
+        intData = this.getNextBits(8);
+        output.push( intData);
+        length--;
+      }
+      while (length > 0);
+      return output;
+    };
+    this.getKanjiString=function( dataLength ) {
+      var length = dataLength;
+      var intData = 0;
+      var unicodeString = '';
+      do
+      {
+        intData = getNextBits(13);
+        var lowerByte = intData % 0xC0;
+        var higherByte = intData / 0xC0;
+
+        var tempWord = (higherByte << 8) + lowerByte;
+        var shiftjisWord = 0;
+        if (tempWord + 0x8140 <= 0x9FFC ) {
+          // between 8140 - 9FFC on Shift_JIS character set
+          shiftjisWord = tempWord + 0x8140;
+        }
+        else
+        {
+          // between E040 - EBBF on Shift_JIS character set
+          shiftjisWord = tempWord + 0xC140;
+        }
+
+        // var tempByte = new Array(0,0);
+        // tempByte[0] = (sbyte) (shiftjisWord >> 8);
+        // tempByte[1] = (sbyte) (shiftjisWord & 0xFF);
+        // unicodeString += new String(SystemUtils.ToCharArray(SystemUtils.ToByteArray(tempByte)));
+                unicodeString += String.fromCharCode(shiftjisWord);
+        length--;
+      }
+      while (length > 0);
+
+
+      return unicodeString;
+    };
+
+  this.__defineGetter__('DataByte', function( ) {
+    var output = new Array();
+    var MODE_NUMBER = 1;
+      var MODE_ROMAN_AND_NUMBER = 2;
+      var MODE_8BIT_BYTE = 4;
+      var MODE_KANJI = 8;
+    do
+          {
+            var mode = this.NextMode();
+            // canvas.println("mode: " + mode);
+            if (mode == 0 ) {
+              if (output.length > 0)
+                {break;}
+              else
+                {throw new Error('Empty data block');}
+            }
+            // if (mode != 1 && mode != 2 && mode != 4 && mode != 8)
+            //  break;
+            // }
+            if (mode != MODE_NUMBER && mode != MODE_ROMAN_AND_NUMBER && mode != MODE_8BIT_BYTE && mode != MODE_KANJI ) {
+              /*          canvas.println("Invalid mode: " + mode);
+              mode = guessMode(mode);
+              canvas.println("Guessed mode: " + mode); */
+              throw new Error('Invalid mode: ' + mode + ' in (block:' + this.blockPointer + ' bit:' + this.bitPointer + ')');
+            }
+            var dataLength = this.getDataLength(mode);
+            if (dataLength < 1)
+              {throw 'Invalid data length: ' + dataLength;}
+            // canvas.println("length: " + dataLength);
+            switch (mode ) {
+              case MODE_NUMBER:
+                // canvas.println("Mode: Figure");
+                var temp_str = this.getFigureString(dataLength);
+                var ta = new Array(temp_str.length);
+                for (var j=0; j<temp_str.length; j++)
+                  {ta[j]=temp_str.charCodeAt(j);}
+                output.push(ta);
+                break;
+
+              case MODE_ROMAN_AND_NUMBER:
+                // canvas.println("Mode: Roman&Figure");
+                var temp_str = this.getRomanAndFigureString(dataLength);
+                var ta = new Array(temp_str.length);
+                for (var j=0; j<temp_str.length; j++)
+                  {ta[j]=temp_str.charCodeAt(j);}
+                output.push(ta );
+                // output.Write(SystemUtils.ToByteArray(temp_sbyteArray2), 0, temp_sbyteArray2.Length);
+                break;
+
+              case MODE_8BIT_BYTE:
+                // canvas.println("Mode: 8bit Byte");
+                // sbyte[] temp_sbyteArray3;
+                var temp_sbyteArray3 = this.get8bitByteArray(dataLength);
+                output.push(temp_sbyteArray3);
+                // output.Write(SystemUtils.ToByteArray(temp_sbyteArray3), 0, temp_sbyteArray3.Length);
+                break;
+
+              case MODE_KANJI:
+                // canvas.println("Mode: Kanji");
+                // sbyte[] temp_sbyteArray4;
+                // temp_sbyteArray4 = SystemUtils.ToSByteArray(SystemUtils.ToByteArray(getKanjiString(dataLength)));
+                // output.Write(SystemUtils.ToByteArray(temp_sbyteArray4), 0, temp_sbyteArray4.Length);
                                 var temp_str = this.getKanjiString(dataLength);
-								output.push(temp_str);
-								break;
-							}
-						//			
-						//canvas.println("DataLength: " + dataLength);
-						//Console.out.println(dataString);
-					}
-					while (true);
-		return output;
-	});
+                output.push(temp_str);
+                break;
+              }
+            //
+            // canvas.println("DataLength: " + dataLength);
+            // Console.out.println(dataString);
+          }
+          while (true);
+    return output;
+  });
 }
