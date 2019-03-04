@@ -27,10 +27,10 @@ qrcode.sizeOfDataLengthInfo = [[10, 9, 8, 8], [12, 11, 16, 10], [14, 13, 16, 12]
 
 qrcode.callback = null;
 
-// In order to support ShadowDOM and not to break the current API, I simply add
-// a 2nd parameter : the canvas
-qrcode.decode = function(src, qrCanvas) {
-  if (arguments.length == 1) {
+
+// Adding the possibility of using an external callback...
+qrcode.decodeWithCallback = function(callback, src, qrCanvas ) {
+  if (arguments.length == 2) {
     var image = new Image();
     // image.crossOrigin = "Anonymous";
     image.onload=function() {
@@ -54,11 +54,11 @@ qrcode.decode = function(src, qrCanvas) {
         qrcode.imagedata = context.getImageData(0, 0, canvasQr.width, canvasQr.height);
       } catch (e) {
         qrcode.result = 'Cross domain image reading not supported in your browser! Save it to your computer then drag and drop the file!';
-        if (qrcode.callback!=null) {
-          qrcode.callback(qrcode.result);
+        if (callback!=null) {
+          callback(qrcode.result);
         }
         return;
-      }
+      } 
       try {
         qrcode.result = qrcode.process(context);
       }
@@ -66,14 +66,14 @@ qrcode.decode = function(src, qrCanvas) {
         console.log(e);
         qrcode.result = 'error decoding QR Code';
       }
-      if (qrcode.callback!=null) {
-        qrcode.callback(qrcode.result);
+      if (callback!=null) {
+        callback(qrcode.result);
       }
     };
     image.src = src;
   } else {
     var canvasQr;
-    if (arguments.length==0) {
+    if (arguments.length==1) {
       canvasQr = document.getElementById('qr-canvas');
     } else {
       canvasQr = qrCanvas;
@@ -83,11 +83,18 @@ qrcode.decode = function(src, qrCanvas) {
     qrcode.height = canvasQr.height;
     qrcode.imagedata = context.getImageData(0, 0, qrcode.width, qrcode.height);
     qrcode.result = qrcode.process(context);
-    if (qrcode.callback!=null) {
-      qrcode.callback(qrcode.result);
+    if (callback!=null) {
+      callback(qrcode.result);
     }
     return qrcode.result;
   }
+};
+
+
+// In order to support ShadowDOM and not to break the current API, I simply add
+// a 2nd parameter : the canvas
+qrcode.decode = function(src, qrCanvas) {
+  qrcode.decodeWithCallback(qrcode.callback, src, qrCanvas);
 };
 
 qrcode.isUrl = function(s) {
